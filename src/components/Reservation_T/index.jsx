@@ -1,29 +1,99 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import "./Reservation_T.css"
+import { supabase } from "../../lib/supabaseClient"
 
 function Reservation_T() {
+  // 기존 예약 리스트 구조 유지
   const [reservationlist, setReservationlist] = useState([
     {
       id: "1",
       date: "2023년 06월 15일",
-      dogName: "멍멍이",
-      DBTI: "ISFP",
-      trainerName: "김트레이너",
-      trainerMBTI: "ENFJ",
-    },
-    {
-      id: "2",
-      date: "2023년 06월 16일",
-      dogName: "왈왈이",
-      DBTI: "ENTP",
-      trainerName: "이트레이너",
-      trainerMBTI: "ISFJ",
-    },
+      dogName: "로딩 중...",
+      DBTI: "로딩 중...",
+      dogImage: "/placeholder.svg",
+      trainerName: "로딩 중...",
+      trainerMBTI: "로딩 중...",
+      trainerImage: "/placeholder.svg"
+    }
   ])
+  
+  const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
+
+  // 강아지와 트레이너 정보 불러오기
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true)
+        console.log("데이터 로딩 시작...")
+        
+        // 현재 로그인한 사용자 정보 가져오기
+        const { data: { user }, error: userError } = await supabase.auth.getUser()
+        
+        if (userError || !user) {
+          console.error("로그인이 필요합니다:", userError)
+          return
+        }
+        
+        console.log("로그인 사용자 ID:", user.id)
+        
+        // 강아지 정보 가져오기 - DogInformation에서 등록한 정보
+        // 현재 로그인한 사용자와 연결된 강아지 정보를 가져옵니다
+        const { data: petData, error: petError } = await supabase
+          .from("pets")
+          .select("name, pet_mbti, image_url")
+          .eq("uuid_id", user.id)  // 현재 사용자의 강아지 정보
+          .maybeSingle()  // 단일 결과 반환
+        
+        if (petError) {
+          console.error("강아지 정보 조회 실패:", petError)
+        } else {
+          console.log("조회된 강아지 정보:", petData)
+        }
+        
+        // 트레이너 정보 가져오기 - TrainerInformation에서 등록한 정보
+        const { data: trainerData, error: trainerError } = await supabase
+          .from("trainers")
+          .select("name, trainer_mbti, trainer_image_url")
+          .eq("uuid_id", user.id)
+          .single()
+          
+        if (trainerError) {
+          console.error("트레이너 정보 조회 실패:", trainerError)
+        } else {
+          console.log("조회된 트레이너 정보:", trainerData)
+        }
+        
+        // 가져온 정보로 예약 리스트 업데이트
+        setReservationlist(prevList => 
+          prevList.map(reservation => ({
+            ...reservation,
+            // 강아지 정보 업데이트 (데이터가 있는 경우에만)
+            ...(petData && {
+              dogName: petData.name || "정보 없음",
+              DBTI: petData.pet_mbti || "정보 없음",
+              dogImage: petData.image_url || "/dogprofile/dog.jpg"
+            }),
+            // 트레이너 정보 업데이트 (데이터가 있는 경우에만)
+            ...(trainerData && {
+              trainerName: trainerData.name || "정보 없음",
+              trainerMBTI: trainerData.trainer_mbti || "정보 없음",
+              trainerImage: trainerData.trainer_image_url || "/trainerprofile/trainer.jpg"
+            })
+          }))
+        )
+      } catch (error) {
+        console.error("데이터 로딩 중 오류 발생:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    fetchData()
+  }, [])
 
   const handleDelete = (id) => {
     setReservationlist((prevList) => prevList.filter((reservation) => reservation.id !== id))
@@ -47,7 +117,11 @@ function Reservation_T() {
         </div>
       </header>
       <main className="reservation-t-main">
-        {reservationlist.length > 0 ? (
+        {isLoading ? (
+          <div className="reservation-t-chat-message">
+            <div>데이터를 불러오는 중...</div>
+          </div>
+        ) : reservationlist.length > 0 ? (
           <div className="reservation-t-match-content">
             {reservationlist.map((reservation) => (
               <div key={reservation.id} className="reservation-t-match-card">
@@ -56,7 +130,15 @@ function Reservation_T() {
                 <div className="reservation-t-match-players">
                   <div className="reservation-t-player">
                     <div className="reservation-t-player-avatar">
-                      <img src="/dogprofile/dog.jpg" alt="강아지 사진" className="reservation-t-avatar-image" />
+                      <img 
+                        src={reservation.dogImage || "/placeholder.svg"} 
+                        alt="강아지 사진" 
+                        className="reservation-t-avatar-image"
+                        onError={(e) => {
+                          console.log("강아지 이미지 로드 실패:", e.target.src)
+                          e.target.src = "/dogprofile/dog.jpg"
+                        }}
+                      />
                     </div>
                     <div className="reservation-t-player-name">{reservation.dogName}</div>
                     <div className="reservation-t-player-detail">{reservation.DBTI}</div>
@@ -67,9 +149,13 @@ function Reservation_T() {
                   <div className="reservation-t-player">
                     <div className="reservation-t-player-avatar">
                       <img
-                        src="/trainerprofile/trainer.jpg"
+                        src={reservation.trainerImage || "/placeholder.svg"}
                         alt="트레이너 사진"
                         className="reservation-t-avatar-image"
+                        onError={(e) => {
+                          console.log("트레이너 이미지 로드 실패:", e.target.src)
+                          e.target.src = "/trainerprofile/trainer.jpg"
+                        }}
                       />
                     </div>
                     <div className="reservation-t-player-name">{reservation.trainerName}</div>
@@ -108,4 +194,3 @@ function Reservation_T() {
 }
 
 export default Reservation_T
-

@@ -11,10 +11,21 @@ function Reservation2() {
     name: "",
     pet_mbti: ""
   })
+  // 트레이너 정보를 저장할 상태 추가
+  const [trainerInfo, setTrainerInfo] = useState({
+    name: "로딩 중...",
+    trainer_mbti: "",
+    trainer_image_url: null
+  })
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const fetchPetProfile = async () => {
+    const fetchData = async () => {
       try {
+        setIsLoading(true)
+        console.log("데이터 로딩 시작...")
+        
+        // 현재 로그인한 사용자 정보 가져오기
         const { data: { user }, error: userError } = await supabase.auth.getUser()
 
         if (userError) {
@@ -27,6 +38,9 @@ function Reservation2() {
           return
         }
 
+        console.log("현재 로그인한 사용자 ID:", user.id)
+
+        // 반려견 정보 가져오기
         const { data: petData, error: petError } = await supabase
           .from("pets")
           .select("*")
@@ -35,22 +49,50 @@ function Reservation2() {
 
         if (petError) {
           console.error("반려견 데이터 조회 에러:", petError)
-          return
-        }
-
-        if (petData) {
+        } else if (petData) {
           setProfileImage(petData.image_url)
           setPetInfo({
             name: petData.name || "",
             pet_mbti: petData.pet_mbti || ""
           })
+          console.log("반려견 정보 로드 완료:", petData.name)
+        } else {
+          console.log("반려견 정보가 없습니다.")
+        }
+
+        // 트레이너 정보 가져오기 - 현재 로그인한 사용자의 UUID로 필터링
+        const { data: trainerData, error: trainerError } = await supabase
+          .from("trainers")
+          .select("name, trainer_mbti, trainer_image_url")
+          .eq("uuid_id", user.id)  // 현재 로그인한 사용자의 UUID로 필터링
+          .maybeSingle()
+
+        if (trainerError) {
+          console.error("트레이너 데이터 조회 에러:", trainerError)
+        } else if (trainerData) {
+          setTrainerInfo({
+            name: trainerData.name || "이름 없음",
+            trainer_mbti: trainerData.trainer_mbti || "",
+            trainer_image_url: trainerData.trainer_image_url
+          })
+          console.log("트레이너 정보 로드 완료:", trainerData.name)
+        } else {
+          console.log("트레이너 정보가 없습니다.")
+          // 트레이너 정보가 없는 경우 기본값 설정
+          setTrainerInfo({
+            name: "트레이너 정보 없음",
+            trainer_mbti: "",
+            trainer_image_url: null
+          })
         }
       } catch (error) {
         console.error("데이터 불러오기 실패:", error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
-    fetchPetProfile()
+    fetchData()
   }, [])
 
   return (
@@ -72,46 +114,68 @@ function Reservation2() {
       </header>
 
       <div className="reservation2-match-content">
-        <div className="reservation2-match-card">
-          <div className="reservation2-match-date">0000년 00월 00일</div>
-          <div className="reservation2-match-status">매칭 완료!</div>
-          <div className="reservation2-match-players">
-            <div className="reservation2-player">
-              <div className="reservation2-player-avatar">
-                {profileImage ? (
-                  <img
-                    src={profileImage || "/placeholder.svg"}
-                    alt="반려견 프로필"
-                    className="reservation2-avatar-image"
-                    onError={(e) => {
-                      console.error("이미지 로드 실패:", profileImage)
-                      e.target.src = "/placeholder.svg"
-                      setProfileImage(null)
-                    }}
-                  />
-                ) : (
-                  <div className="reservation2-avatar-placeholder">
-                    <span>프로필 없음</span>
-                  </div>
-                )}
+        {isLoading ? (
+          <div style={{ textAlign: "center", padding: "20px" }}>데이터를 불러오는 중...</div>
+        ) : (
+          <div className="reservation2-match-card">
+            <div className="reservation2-match-date">0000년 00월 00일</div>
+            <div className="reservation2-match-status">매칭 완료!</div>
+            <div className="reservation2-match-players">
+              <div className="reservation2-player">
+                <div className="reservation2-player-avatar">
+                  {profileImage ? (
+                    <img
+                      src={profileImage || "/placeholder.svg"}
+                      alt="반려견 프로필"
+                      className="reservation2-avatar-image"
+                      onError={(e) => {
+                        console.error("이미지 로드 실패:", profileImage)
+                        e.target.src = "/placeholder.svg"
+                        setProfileImage(null)
+                      }}
+                    />
+                  ) : (
+                    <div className="reservation2-avatar-placeholder">
+                      <span>프로필 없음</span>
+                    </div>
+                  )}
+                </div>
+                <div className="reservation2-player-name">{petInfo.name || "이름"}</div>
+                <div className="reservation2-player-detail">
+                  {petInfo.pet_mbti ? `멍BTI : ${petInfo.pet_mbti}` : "멍BTI 미등록"}
+                </div>
               </div>
-              <div className="reservation2-player-name">{petInfo.name || "이름"}</div>
-              <div className="reservation2-player-detail">
-                {petInfo.pet_mbti ? `멍BTI : ${petInfo.pet_mbti}` : "멍BTI 미등록"}
+              <div className="reservation2-match-image">
+                <img src="/reservationicons/matching.png" alt="Matched" className="reservation2-match-icon" />
               </div>
-            </div>
-            <div className="reservation2-match-image">
-              <img src="/reservationicons/matching.png" alt="Matched" className="reservation2-match-icon" />
-            </div>
-            <div className="reservation2-trainer">
-              <div className="reservation2-trainer-avatar">
-                <img src="/trainerprofile/trainer.jpg" alt="트레이너" className="reservation2-trainer-image" />
+              <div className="reservation2-trainer">
+                <div className="reservation2-trainer-avatar">
+                  {trainerInfo.trainer_image_url ? (
+                    <img 
+                      src={trainerInfo.trainer_image_url || "/placeholder.svg"} 
+                      alt="트레이너 프로필" 
+                      className="reservation2-trainer-image"
+                      onError={(e) => {
+                        console.error("트레이너 이미지 로드 실패:", trainerInfo.trainer_image_url)
+                        e.target.src = "/trainerprofile/trainer.jpg"
+                      }}
+                    />
+                  ) : (
+                    <img 
+                      src="/trainerprofile/trainer.jpg" 
+                      alt="기본 트레이너 이미지" 
+                      className="reservation2-trainer-image" 
+                    />
+                  )}
+                </div>
+                <div className="reservation2-trainer-name">{trainerInfo.name}</div>
+                <div className="reservation2-trainer-detail">
+                  {trainerInfo.trainer_mbti ? `MBTI : ${trainerInfo.trainer_mbti}` : "MBTI 미등록"}
+                </div>
               </div>
-              <div className="reservation2-trainer-name">트레이너</div>
-              <div className="reservation2-trainer-detail">자격증</div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
