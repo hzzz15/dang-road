@@ -16,10 +16,10 @@ function Reservation_T() {
       dogImage: "/placeholder.svg",
       trainerName: "로딩 중...",
       trainerMBTI: "로딩 중...",
-      trainerImage: "/placeholder.svg"
-    }
+      trainerImage: "/placeholder.svg",
+    },
   ])
-  
+
   const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
 
@@ -29,61 +29,64 @@ function Reservation_T() {
       try {
         setIsLoading(true)
         console.log("데이터 로딩 시작...")
-        
+
         // 현재 로그인한 사용자 정보 가져오기
-        const { data: { user }, error: userError } = await supabase.auth.getUser()
-        
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser()
+
         if (userError || !user) {
           console.error("로그인이 필요합니다:", userError)
           return
         }
-        
+
         console.log("로그인 사용자 ID:", user.id)
-        
+
         // 강아지 정보 가져오기 - DogInformation에서 등록한 정보
         // 현재 로그인한 사용자와 연결된 강아지 정보를 가져옵니다
         const { data: petData, error: petError } = await supabase
           .from("pets")
           .select("name, pet_mbti, image_url")
-          .eq("uuid_id", user.id)  // 현재 사용자의 강아지 정보
-          .maybeSingle()  // 단일 결과 반환
-        
+          .eq("uuid_id", user.id) // 현재 사용자의 강아지 정보
+          .maybeSingle() // 단일 결과 반환
+
         if (petError) {
           console.error("강아지 정보 조회 실패:", petError)
         } else {
           console.log("조회된 강아지 정보:", petData)
         }
-        
+
         // 트레이너 정보 가져오기 - TrainerInformation에서 등록한 정보
         const { data: trainerData, error: trainerError } = await supabase
           .from("trainers")
           .select("name, trainer_mbti, trainer_image_url")
           .eq("uuid_id", user.id)
           .single()
-          
+
         if (trainerError) {
           console.error("트레이너 정보 조회 실패:", trainerError)
         } else {
           console.log("조회된 트레이너 정보:", trainerData)
         }
-        
+
         // 가져온 정보로 예약 리스트 업데이트
-        setReservationlist(prevList => 
-          prevList.map(reservation => ({
+        setReservationlist((prevList) =>
+          prevList.map((reservation) => ({
             ...reservation,
             // 강아지 정보 업데이트 (데이터가 있는 경우에만)
             ...(petData && {
               dogName: petData.name || "정보 없음",
               DBTI: petData.pet_mbti || "정보 없음",
-              dogImage: petData.image_url || "/dogprofile/dog.jpg"
+              dogImage: petData.image_url || "/dogprofile/dog.jpg",
             }),
             // 트레이너 정보 업데이트 (데이터가 있는 경우에만)
             ...(trainerData && {
               trainerName: trainerData.name || "정보 없음",
               trainerMBTI: trainerData.trainer_mbti || "정보 없음",
-              trainerImage: trainerData.trainer_image_url || "/trainerprofile/trainer.jpg"
-            })
-          }))
+              trainerImage: trainerData.trainer_image_url || "/trainerprofile/trainer.jpg",
+            }),
+          })),
         )
       } catch (error) {
         console.error("데이터 로딩 중 오류 발생:", error)
@@ -91,12 +94,40 @@ function Reservation_T() {
         setIsLoading(false)
       }
     }
-    
+
     fetchData()
   }, [])
 
   const handleDelete = (id) => {
     setReservationlist((prevList) => prevList.filter((reservation) => reservation.id !== id))
+  }
+
+  // "예" 버튼 클릭 시 실행되는 함수
+  const handleAccept = () => {
+    // 페이지 이동 트리거를 위한 이벤트 데이터 저장
+    const navigationData = {
+      timestamp: new Date().getTime(),
+      action: "navigate",
+      target: "/LivePage",
+      id: Math.random().toString(36).substring(2, 9), // 고유 ID 생성
+    }
+
+    // localStorage에 네비게이션 데이터 저장
+    localStorage.setItem("navigationTrigger", JSON.stringify(navigationData))
+    console.log("📤 네비게이션 트리거 저장:", JSON.stringify(navigationData, null, 2))
+
+    // 브로드캐스트 채널을 통한 메시지 전송
+    try {
+      const bc = new BroadcastChannel("navigation_channel")
+      bc.postMessage(navigationData)
+      bc.close()
+      console.log("📡 브로드캐스트 메시지 전송 완료")
+    } catch (error) {
+      console.error("브로드캐스트 채널 오류:", error)
+    }
+
+    // 현재 창은 Live_TPage로 이동
+    navigate("/Live_TPage")
   }
 
   return (
@@ -125,14 +156,14 @@ function Reservation_T() {
           <div className="reservation-t-match-content">
             {reservationlist.map((reservation) => (
               <div key={reservation.id} className="reservation-t-match-card">
-                <div className="reservation-t-match-date">{reservation.date}</div>
+                <div className="reservation-t-match-date">2025년 2월 28일</div>
                 <div className="reservation-t-match-status">매칭완료!</div>
                 <div className="reservation-t-match-players">
                   <div className="reservation-t-player">
                     <div className="reservation-t-player-avatar">
-                      <img 
-                        src={reservation.dogImage || "/placeholder.svg"} 
-                        alt="강아지 사진" 
+                      <img
+                        src={reservation.dogImage || "/placeholder.svg"}
+                        alt="강아지 사진"
                         className="reservation-t-avatar-image"
                         onError={(e) => {
                           console.log("강아지 이미지 로드 실패:", e.target.src)
@@ -166,7 +197,7 @@ function Reservation_T() {
                   <p className="reservation-t-match-question">매칭하시겠습니까?</p>
                   <div className="reservation-t-match-buttons">
                     <button
-                      onClick={() => navigate("/Live_TPage")}
+                      onClick={handleAccept}
                       className="reservation-t-match-button reservation-t-match-button-yes"
                     >
                       예
@@ -194,3 +225,4 @@ function Reservation_T() {
 }
 
 export default Reservation_T
+

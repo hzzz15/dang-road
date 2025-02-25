@@ -1,16 +1,84 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import "./Live.css"
 import Map from "../Map"
 
 function Live() {
-  const [message, setMessage] = useState("") // 현재 입력된 메시지
-  const [messages, setMessages] = useState([]) // 채팅 메시지 리스트
-  const [isSending, setIsSending] = useState(false) // 중복 전송 방지 플래그
-  const [activeTab, setActiveTab] = useState("walk") // 현재 활성화된 탭 ('walk' | 'chat')
+  const [message, setMessage] = useState("")
+  const [messages, setMessages] = useState([])
+  const [isSending, setIsSending] = useState(false)
+  const [activeTab, setActiveTab] = useState("walk")
+  const mapRef = useRef(null); // ✅ Map 컴포넌트에 대한 ref 추가
 
-  // localStorage 변경 감지를 위한 이벤트 리스너
+  // ✅ 산책 시작 상태 감지를 위한 이벤트 리스너
+  useEffect(() => {
+    // localStorage 변경 감지 함수
+    const checkWalkStatus = () => {
+      try {
+        const walkData = localStorage.getItem("walkStarted");
+        if (!walkData) return;
+
+        const data = JSON.parse(walkData);
+        const now = new Date().getTime();
+        const isRecent = now - data.timestamp < 10000; // 10초 이내
+
+        if (isRecent && data.started) {
+          console.log("✅ Live 컴포넌트: 산책 시작 감지, Map 위치 갱신");
+          if (mapRef.current && mapRef.current.updateCurrentLocation) {
+            mapRef.current.updateCurrentLocation();
+          }
+          // 처리 후 데이터 삭제
+          localStorage.removeItem("walkStarted");
+        } else if (!isRecent) {
+          // 오래된 데이터 삭제
+          localStorage.removeItem("walkStarted");
+        }
+      } catch (error) {
+        console.error("산책 상태 확인 오류:", error);
+      }
+    };
+
+    // 초기 실행
+    checkWalkStatus();
+
+    // BroadcastChannel 설정
+    let bc;
+    try {
+      bc = new BroadcastChannel("walk_channel");
+      bc.onmessage = (event) => {
+        console.log("📡 Live 컴포넌트: 산책 채널 메시지 수신:", event.data);
+        if (event.data && event.data.action === "walkStarted") {
+          console.log("✅ Live 컴포넌트: 산책 시작 메시지 수신, Map 위치 갱신");
+          if (mapRef.current && mapRef.current.updateCurrentLocation) {
+            mapRef.current.updateCurrentLocation();
+          }
+        }
+      };
+    } catch (error) {
+      console.error("브로드캐스트 채널 오류:", error);
+    }
+
+    // storage 이벤트 리스너 등록
+    const handleStorageChange = (e) => {
+      if (e.key === "walkStarted") {
+        checkWalkStatus();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    
+    // 주기적으로 확인 (폴링)
+    const interval = setInterval(checkWalkStatus, 1000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+      if (bc) bc.close();
+    };
+  }, []);
+
+  // 기존 localStorage 네비게이션 관련 useEffect 유지
   useEffect(() => {
     // localStorage 변경 감지 함수
     const checkNavigation = () => {
@@ -154,7 +222,7 @@ function Live() {
       {/* 산책경로 탭이 활성화되었을 때 Map 컴포넌트 표시 */}
       {activeTab === "walk" && (
         <div className="live-map-container">
-          <Map />
+          <Map ref={mapRef} /> {/* ✅ ref 추가 */}
         </div>
       )}
 
@@ -198,4 +266,3 @@ function Live() {
 }
 
 export default Live
-

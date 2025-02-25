@@ -1,22 +1,44 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import axios from "axios";
 import { supabase } from "../../lib/supabaseClient";
 import RealTimeLocation from "../RealTimeLocation";
 
 const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY;
 
-const Map = ({ onDataReady }) => {
+// ✅ forwardRef 추가하여 ref 전달 받기
+const Map = forwardRef(({ onDataReady }, ref) => {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [distance, setDistance] = useState(null);
   const [steps, setSteps] = useState(null);
   const [time, setTime] = useState(null);
   const [polyline, setPolyline] = useState(null);
-  const [uuidId, setUuidId] = useState(null);  // ✅ uuidId 상태 추가
+  const [uuidId, setUuidId] = useState(null);
   const [reservationId, setReservationId] = useState(null);
   const [startLocation, setStartLocation] = useState(null);
   const [endLocation, setEndLocation] = useState(null);
   const [prevEndLocation, setPrevEndLocation] = useState(null);
+
+  // ✅ ref를 통해 외부에서 접근 가능한 함수 노출
+  useImperativeHandle(ref, () => ({
+    updateCurrentLocation: () => {
+      // 현재 위치 가져오기
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const newLocation = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+          console.log("📍 산책 시작: 현재 위치 갱신:", newLocation);
+          handleRealTimeLocationUpdate(newLocation);
+        },
+        (error) => {
+          console.error("🚨 위치 정보를 가져오는데 실패했습니다:", error);
+        },
+        { enableHighAccuracy: true }
+      );
+    }
+  }));
 
   useEffect(() => {
     const fetchUserUUID = async () => {
@@ -90,7 +112,7 @@ const Map = ({ onDataReady }) => {
     }
   };
 
-    // ✅ 실시간 목적지 업데이트 (30초마다 호출됨)
+  // ✅ 실시간 목적지 업데이트 (30초마다 호출됨)
   const handleRealTimeLocationUpdate = (newLocation) => {
     console.log("📍 실시간 목적지 업데이트:", newLocation);
     setEndLocation(newLocation); // 목적지 업데이트
@@ -156,15 +178,17 @@ const Map = ({ onDataReady }) => {
       console.log(`⏳ 예상 소요 시간: ${estimatedTime} 분`);
 
       // ✅ 부모 컴포넌트로 데이터 전달
-      onDataReady({ 
-        uuidId,
-        distance: distanceKm, 
-        steps: estimatedSteps, 
-        time: estimatedTime,
-        startLocation: start,
-        endLocation: end,
-
-      });
+      if (onDataReady) {
+        onDataReady({ 
+          uuidId,
+          distance: distanceKm, 
+          steps: estimatedSteps, 
+          time: estimatedTime,
+          startLocation: start,
+          endLocation: end,
+        });
+      }
+      
       drawPedestrianRoute(startLocation, end);
 
     } catch (error) {
@@ -241,7 +265,7 @@ const Map = ({ onDataReady }) => {
         path: drawInfoArr,
         strokeColor: "#0000FF",
         strokeWeight: 6,
-        map: mapInstance,
+        map: mapInstance || map,
         zIndex: 1000,
       });
 
@@ -273,7 +297,7 @@ const Map = ({ onDataReady }) => {
     setMap(newMap);
 
     new window.Tmapv2.Marker({ position: startPosition, map: newMap, label: "출발지" });
-    new window.Tmapv2.Marker({ position: endPosition, map: newMap, label: "목적지" });
+    new window.Tmapv2.Marker({ position: endPosition, map: newMap, label: "현재위치" });
   };
 
   return (
@@ -282,6 +306,6 @@ const Map = ({ onDataReady }) => {
       <div id="map" ref={mapRef} style={{ width: "100%", height: "80%", borderRadius: "20px" }} />
     </div>
   );
-};
+});
 
 export default Map;
