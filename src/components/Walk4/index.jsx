@@ -86,6 +86,12 @@ const Walk4 = () => {
       {selectedTrainer && (
         <div className="Walk4-selected-info">
           <p>선택한 트레이너: <strong>{selectedTrainer.name}</strong></p>
+          
+          {/* 추천 메시지 표시 영역 추가 */}
+          <div className="recommendation-container">
+            <div className="recommendation-title">트레이너 추천 이유</div>
+            <p>{selectedTrainer.recommendation || "추천 메시지가 없습니다."}</p>
+          </div>
         </div>
       )}
 

@@ -1,6 +1,10 @@
 /* Walk4 전체 컨테이너 */
 .Walk4-container {
   background-color: #FFE0B2; /* 배경색 변경 */
+  height: 100vh; /* 화면 전체 높이 */
+  overflow-y: auto; /* 세로 스크롤 가능 */
+  padding-bottom: 100px; /* 하단 버튼 영역 높이보다 크게 설정 */
+  position: relative; /* 상대 위치 설정 */
 }
 
 
@@ -35,7 +39,7 @@
   flex-direction: column;
   align-items: center;
   background-color: white;
-  padding: 10px 12px;
+  padding: 4px 4px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -104,6 +108,7 @@
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
+  z-index: 1000; /* z-index 값을 더 높게 설정 */
 }
 
 /* ✅ 하단 버튼 고정 */
@@ -185,6 +190,8 @@
   margin-top: 10px;
   font-weight: bold;
   color: #333;
+  padding: 0 20px;
+  margin-bottom: 120px; /* 80px에서 120px로 증가 */
 }
 
 /* ✅ 버튼 비활성화 스타일 */
@@ -201,4 +208,31 @@
   font-weight: bold;
   color: #333;
   padding: 20px;
+}
+
+/* 추천 메시지 컨테이너 스타일 */
+.recommendation-container {
+  margin-top: 15px;
+  padding: 10px 15px;
+  background-color: #FFF8E1;
+  border-radius: 8px;
+  border-left: 3px solid #F2762E;
+  font-size: 14px;
+  line-height: 1.5;
+  /* max-height 제거 */
+  /* overflow-y 제거 */
+  word-break: keep-all;
+  text-align: left;
+}
+
+/* 추천 메시지 제목 스타일 */
+.recommendation-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #F2762E;
+}
+
+/* 콘텐츠 영역 패딩 조정 */
+.Walk4-content {
+  padding-bottom: 100px; /* 하단 버튼 높이 + 여백 */
 }
