@@ -14,21 +14,20 @@
 
 /* ✅ 트레이너 리스트 스크롤 가능하게 */
 .Walk4-trainer-list {
-  flex-grow: 1; /* 남은 공간을 모두 차지 */
-  overflow-y: auto; /* 스크롤 가능 */
+  flex-grow: 1;
+  overflow-y: auto;
   display: grid;
-  grid-template-columns: repeat(2, minmax(120px, 1fr)); /* 🔥 최소 크기 설정 */
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
   gap: 12px;
-  padding: 10px 20px;
-  padding-bottom: 20px;
-  width: 100%;
-  max-width: 600px; /* 최대 크기 유지 */
-  margin: 0 auto; 
-
-  /* 🔥 리스트 자체도 높이 지정 */
+  padding: 10px 12px;
+  width: 90%;
+  max-width: 400px;
+  margin: 0 auto;
+  justify-items: center;
   max-height: calc(100vh - 300px);
   overflow-y: auto;
 }
+
 
 /* ✅ 트레이너 카드 (크기 줄이기) */
 .trainer-card {
@@ -36,13 +35,14 @@
   flex-direction: column;
   align-items: center;
   background-color: white;
-  padding: 10px 12px; /* 🔥 내부 패딩 줄임 */
-  border-radius: 8px; /* 약간 더 작은 라운딩 */
+  padding: 10px 12px;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 130px; /* 🔥 카드 크기 줄이기 */
-  margin: auto;
-  margin-left: 0; /* 🔥 왼쪽 정렬 */
+  max-width: 200px; /* 카드 크기 증가 */
+  margin: 0 auto;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
 }
 
 
@@ -173,9 +173,8 @@
 
 /* ✅ 선택된 트레이너 카드 스타일 */
 .trainer-card.selected {
-  border: 2px solid #f2762e; /* 강조 색상 */
-  background-color: #ffefdb; /* 선택된 효과 */
-  transform: scale(1.05); /* 선택되면 약간 커지게 */
+  border: 1px solid #f2762e;
+  background-color: #ffefdb;
   transition: all 0.2s ease-in-out;
 }
 
