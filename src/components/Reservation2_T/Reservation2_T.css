@@ -1,0 +1,132 @@
+.reservation2-t-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #fff3da;
+  }
+  
+  .reservation2-t-header {
+    background-color: #fff;
+    height: auto;
+    min-height: 140px;
+    padding: 20px 20px 0 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .reservation2-t-header-content {
+    width: 100%;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .reservation2-t-header-content h1 {
+    font-size: 33px;
+    font-weight: bold;
+    color: #000000;
+    margin: 0 0 auto 0;
+  }
+  
+  .reservation2-t-header-buttons {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 130px;
+  }
+  
+  .reservation2-t-header-button {
+    background: none;
+    border: none;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #565656;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .reservation2-t-header-button.active {
+    color: #000;
+    font-weight: 500;
+  }
+  
+  .reservation2-t-header-button.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #f2762e;
+  }
+  
+  .reservation2-t-header-button:hover {
+    color: #000;
+  }
+  
+  .reservation2-t-main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    margin-bottom: 100px;
+  }
+  
+  .reservation2-t-bottom-space {
+    height: 1px;
+    flex-shrink: 0;
+  }
+  
+  .reservation2-t-toggle-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .reservation2-t-matching-text {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    color: #000000;
+    margin: 20px 0 20px;
+    padding: 0 20px;
+  }
+  
+  .reservation2-t-switch-btn {
+    width: 160px;
+    height: 45px;
+    border-radius: 25px;
+    border: 1px solid #f2762e;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: white;
+    color: #f2762e;
+    text-align: center;
+    line-height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+  
+  .reservation2-t-switch-btn.on {
+    background-color: white;
+    color: #f2762e;
+    border: 1px solid #f2762e;
+  }
+  
+  .reservation2-t-switch-btn.off {
+    background-color: white;
+    color: #f2762e;
+    border: 1px solid #f2762e;
+  }
+  
+  .reservation2-t-switch-btn:hover {
+    opacity: 0.9;
+  }
+  
+  

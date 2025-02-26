@@ -23,13 +23,13 @@ def get_openai_recommendation(prompt: str) -> tuple:
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=1000,
+            max_tokens=500,
             temperature=0.2
         )
         recommendation = response["choices"][0]["message"]["content"].strip()
 
         # GPT 응답에서 숫자(0~100 사이)를 추출 (예: "**궁합 점수: 85**")
-        match = re.search(r"궁합\s*점수[:：]?\s*(\d{1,3})", recommendation)
+        match = re.search(r"(?:궁합\s*점수|매칭\s*점수)[:：]?\s*(\d{1,3})", recommendation)
         if match:
             gpt_score = int(match.group(1))  # 첫 번째 숫자를 점수로 사용
             recommendation = recommendation.replace(match.group(0), "").strip()

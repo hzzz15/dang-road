@@ -22,6 +22,8 @@ import ReservationPage from "./pages/ReservationPage"
 import Reservation1Page from "./pages/Reservation1Page"
 import Reservation2Page from "./pages/Reservation2Page"
 import Reservation_TPage from "./pages/Reservation_TPage" // 트레이너
+import Reservation2_TPage from "./pages/Reservation2_TPage" // 트레이너
+
 
 // 예약내역/지난예약
 import LastPage from "./pages/LastPage"
@@ -103,6 +105,8 @@ function App() {
       <Route path="/Reservation1Page" element={<Reservation1Page />} />
       <Route path="/Reservation2Page" element={<Reservation2Page />} />
       <Route path="/Reservation_TPage" element={<Reservation_TPage />} />
+      <Route path="/Reservation2_TPage" element={<Reservation2_TPage />} />
+
 
       {/* 예약내역/지난예약 */}
       <Route path="/LastPage" element={<LastPage />} />
