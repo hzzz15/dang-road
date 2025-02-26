@@ -14,11 +14,28 @@ const Walk4 = () => {
       console.error("pet_id가 전달되지 않았습니다.");
       return;
     }
+
     fetch(`http://localhost:8000/match/pet/${pet_id}/matches`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("✅ API 응답 데이터:", data);
-        setTrainers(data.matches || []); // ✅ 변환 없이 원본 데이터 그대로 사용
+        console.log("📢 API 응답 데이터:", data); // ✅ API 응답 데이터 확인
+        const matchesArray = data.matches || [];
+
+        if (matchesArray.length > 0) {
+          console.log("🔹 첫 번째 트레이너 데이터:", matchesArray[0]); // ✅ 첫 번째 트레이너 데이터 확인
+        }
+
+        const mappedTrainers = matchesArray.map((trainer) => ({
+          trainer_id: trainer.trainer_id,
+          name: trainer.name,
+          experience: trainer.experience,
+          trainer_mbti: trainer.trainer_mbti,
+          total_match_score: trainer.total_match_score,  // ✅ total_match_score 직접 전달
+          trainer_image_url: trainer.trainer_image_url,
+        }));
+
+        console.log("✅ 매핑된 트레이너 데이터:", mappedTrainers); // ✅ 데이터 매핑 확인
+        setTrainers(mappedTrainers);
         setLoading(false);
       })
       .catch((error) => {

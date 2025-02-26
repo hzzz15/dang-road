@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import "./Trainer.css";
 
-function Trainer({ name, experience, trainer_mbti, match_scores, trainer_image_url }) {
+function Trainer({ name, experience, trainer_mbti, total_match_score, trainer_image_url }) {
   const [imageError, setImageError] = useState(false);
 
-  console.log(`🖼️ 트레이너 ${name}의 이미지 URL:`, trainer_image_url); // ✅ 디버깅 로그 추가
+  console.log(`📢 트레이너 컴포넌트 데이터 - ${name}:`, {
+    name,
+    experience,
+    trainer_mbti,
+    total_match_score,
+    trainer_image_url,
+  }); // ✅ 트레이너 데이터 확인
 
   return (
     <div className="trainer-card">
@@ -14,10 +20,7 @@ function Trainer({ name, experience, trainer_mbti, match_scores, trainer_image_u
             src={trainer_image_url} 
             alt={name || "트레이너"} 
             className="trainer-image"
-            onError={() => {
-              console.error(`🚨 이미지 로딩 실패: ${trainer_image_url}`);
-              setImageError(true);
-            }}
+            onError={() => setImageError(true)}
           />
         ) : (
           <div className="trainer-image-fallback">
@@ -29,7 +32,7 @@ function Trainer({ name, experience, trainer_mbti, match_scores, trainer_image_u
       <div className="trainer-info">
         <p className="trainer-name">{name}</p>
         <p className="trainer-mbti">MBTI : {trainer_mbti}</p>
-        <p className="trainer-score">총 궁합: {match_scores?.total_match_score}</p>
+        <p className="trainer-score">총 궁합 : {total_match_score || "점수 없음"}</p> {/* ✅ GPT 추천 점수 표시 */}
       </div>
     </div>
   );

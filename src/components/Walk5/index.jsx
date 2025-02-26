@@ -64,8 +64,8 @@ export default function Walk5() {
 
     const requestData = {
       uuid_id: userUUID, // 로그인한 사용자 UUID
-      pet_id: 1, // 🐶 실제 선택된 반려동물 ID (테스트용)
-      trainer_id: 107, // 👨‍🏫 트레이너 ID (테스트용)
+      pet_id: 140, // 🐶 실제 선택된 반려동물 ID (테스트용)
+      trainer_id: 127, // 👨‍🏫 트레이너 ID (테스트용)
       schedule: new Date().toISOString().split("Z")[0], // 🗓️ 예약 시간 (현재 시간)
       status: "pending",
       address: latestAddress.address,
