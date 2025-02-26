@@ -79,7 +79,7 @@ function BottomNavigation_T() {
             // 예약내역 메뉴의 경우 Reservation_TPage와 Last_TPage 모두에서 active 상태 유지
             (
               item.name === "예약내역" &&
-                (location.pathname === "/Reservation_TPage" || location.pathname === "/Last_TPage")
+                (location.pathname === "/Reservation_TPage" || location.pathname === "/Last_TPage" || location.pathname === "/Reservation2_TPage")
             ) || location.pathname === item.path
               ? "active"
               : ""

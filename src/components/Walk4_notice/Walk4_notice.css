@@ -1,82 +1,68 @@
 .Walk4_notice-container {
-    background-color: #FFE0B2; 
-    min-height: 100vh; /* 화면 전체 높이 유지 */
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .Walk4_notice-header {
-    background-color: #ffffff;
-    padding: 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-    
-    /* 뒤로가기 버튼 */
-    .Walk4_notice-back-button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 8px;
-    }
-    
-    .Walk4_notice-back-button img {
-      width: 24px;
-      height: 24px;
-    }
-    
-    /* 타이틀 스타일 */
-    .Walk4_notice-title {
-      font-size: 24px;
-      font-weight: 500;
-      margin-left: 10px;
-    }
-    
-  /* 설명 컨텐츠 중앙 정렬 + 스크롤 가능 */
-  .Walk4_notice-content {
-    max-width: 550px;
-    width: 88%; /* ✅ 폭을 살짝 줄여서 배경이 양옆에서 더 보이게 */
-    display: flex;
-    flex-direction: column;
-    background-color: #ffffff; /* ✅ 투명도 조정해서 배경 보이게 */
-    border-radius: 20px;
-    padding: 15px;
-    box-shadow: none; /* ✅ 그림자 제거해서 박스가 둥둥 떠있는 느낌 없애기 */
-    line-height: 1.6;
-    font-size: 16px;
-  
-    /* ✅ 중앙 정렬 */
-    position: absolute;
-    top: calc(50% + 80px);
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 70vh;
-    overflow-y: auto; /* 내부에서만 스크롤 가능 */
-  }
-  
-  
-  /* 스크롤바 스타일 (크롬, 엣지, 사파리) */
-  .Walk4_notice-content::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .Walk4_notice-content::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-  }
-  
-  .Walk4_notice-content::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  /* h3과 p 간격 조정 */
-  .Walk4_notice-content h3 {
-    margin-bottom: 8px; /* 기존보다 간격 증가 */
-  }
-  
-  .Walk4_notice-content p {
-    margin-top: 0;
-    margin-bottom: 10px; /* p 요소 간격 더 넓게 조정 */
-  }
-  
+  background-color: #FFE0B2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.Walk4_notice-header {
+  background-color: #ffffff;
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.Walk4_notice-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.Walk4_notice-back-button img {
+  width: 24px;
+  height: 24px;
+}
+
+.Walk4_notice-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-left: 10px;
+  white-space: pre-line;
+}
+
+.Walk4_notice-content {
+  max-width: 550px;
+  width: 88%;
+  display: flex;
+  flex-direction: column;
+  /* background-color: #ffffff; */
+  border-radius: 20px;
+  padding: 15px;
+  line-height: 1.6;
+  font-size: 16px;
+  position: absolute;
+  top: calc(50% + 80px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 70vh;
+  overflow-y: auto;
+}
+
+.recommendation-container {
+  margin-top: 15px;
+  padding: 15px 20px;
+  background-color: #FFF8E1;
+  border-radius: 8px;
+  border-left: 3px solid #ffffff;
+  font-size: 16px;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.no-trainer-message {
+  text-align: center;
+  color: #666;
+  margin-top: 20px;
+}

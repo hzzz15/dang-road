@@ -82,7 +82,7 @@ function ResultLast() {
           walkReports.map((report, index) => (
             <div className="resultlast-walk-report-card" key={index}>
               <div className="resultlast-report-date">{new Date(report.created_at).toLocaleDateString()}</div>
-              <div className="resultlast-report-title">○○이 산책 리포트</div>
+              <div className="resultlast-report-title">하늘이 산책 리포트</div>
 
               <div className="resultlast-profile-section">
                 <div className="resultlast-profile-circle resultlast-dog-photo">
@@ -110,7 +110,7 @@ function ResultLast() {
                   />
                 </div>
                 <div className="resultlast-profile-circle resultlast-user-photo">
-                  <img src="/trainerprofile/trainer.jpg" alt="프로필" />
+                  <img src="/trainerprofile/karina.jpg" alt="프로필" />
                 </div>
               </div>
 
@@ -122,13 +122,13 @@ function ResultLast() {
 
                 <div className="resultlast-detail-item">
                   <h3>시간</h3>
-                  <p>{report.estimated_time}</p>
+                  <p>{report.estimated_time}분</p>
                 </div>
 
                 <div className="resultlast-detail-item">
                   <h3>특이사항</h3>
                   <div className="resultlast-notes-box">
-                    <p>{report.feedback || "기록된 특이사항이 없습니다."}</p>
+                    <p>{"기록된 특이사항이 없습니다."}</p>
                   </div>
                 </div>
               </div>

@@ -1,14 +1,20 @@
 "use client"
 
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import "./Reservation2_T.css"
 import CalendarComponent from "../CalendarComponent"
 
 function Reservation2_T() {
   const navigate = useNavigate()
+  const [isNavigating, setIsNavigating] = useState(false)
 
   const handleOnClick = () => {
-    navigate("/Reservation_TPage")
+    setIsNavigating(true)
+
+    setTimeout(() => {
+      navigate("/Reservation_TPage")
+    }, 2000) // 2 seconds delay
   }
 
   return (
@@ -30,12 +36,18 @@ function Reservation2_T() {
       </header>
       <main className="reservation2-t-main">
         <CalendarComponent />
-        <div className="reservation2-t-matching-text">매칭을 시작하시겠습니까?</div>
+        <div className="reservation2-t-matching-text">{isNavigating ? "매칭 중..." : "매칭을 시작하시겠습니까?"}</div>
         <div className="reservation2-t-toggle-buttons">
-          <button className="reservation2-t-switch-btn on" onClick={handleOnClick}>
+          <button
+            className={`reservation2-t-switch-btn on ${isNavigating ? "disabled" : ""}`}
+            onClick={handleOnClick}
+            disabled={isNavigating}
+          >
             ON
           </button>
-          <button className="reservation2-t-switch-btn off">OFF</button>
+          <button className="reservation2-t-switch-btn off" disabled={isNavigating}>
+            OFF
+          </button>
         </div>
       </main>
       <div className="reservation2-t-bottom-space"></div>

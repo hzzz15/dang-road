@@ -11,7 +11,7 @@ function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [weatherLocation, setWeatherLocation] = useState(() => {
     const storedWeatherLocation = localStorage.getItem("weatherLocation")
-    return storedWeatherLocation ? JSON.parse(storedWeatherLocation) : { city: "서울특별시", district: "강남구" }
+    return storedWeatherLocation ? JSON.parse(storedWeatherLocation) : { city: "천안시", district: "동남구" }
   })
 
   // ✅ 로그인 상태 확인 (Supabase 세션 기반)

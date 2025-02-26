@@ -1,12 +1,11 @@
 /* Walk4 전체 컨테이너 */
 .Walk4-container {
-  background-color: #FFE0B2; /* 배경색 변경 */
-  height: 100vh; /* 화면 전체 높이 */
-  overflow-y: auto; /* 세로 스크롤 가능 */
-  padding-bottom: 100px; /* 하단 버튼 영역 높이보다 크게 설정 */
-  position: relative; /* 상대 위치 설정 */
+  background-color: #FFE0B2;
+  height: 100vh;
+  overflow-y: auto;
+  padding-bottom: 100px;
+  position: relative;
 }
-
 
 .Walk4-header {
   background-color: #ffffff;
@@ -16,7 +15,7 @@
   z-index: 100;
 }
 
-/* ✅ 트레이너 리스트 스크롤 가능하게 */
+/* 트레이너 리스트 스크롤 가능하게 */
 .Walk4-trainer-list {
   flex-grow: 1;
   overflow-y: auto;
@@ -32,8 +31,7 @@
   overflow-y: auto;
 }
 
-
-/* ✅ 트레이너 카드 (크기 줄이기) */
+/* 트레이너 카드 */
 .trainer-card {
   display: flex;
   flex-direction: column;
@@ -43,14 +41,13 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 200px; /* 카드 크기 증가 */
+  max-width: 200px;
   margin: 0 auto;
   box-sizing: border-box;
   transition: all 0.2s ease-in-out;
 }
 
-
-/* ✅ 트레이너 정보 */
+/* 트레이너 정보 */
 .trainer-info {
   display: flex;
   justify-content: space-between;
@@ -68,7 +65,7 @@
   margin-bottom: 20px;
 }
 
-.walk4-back-button img {
+.Walk4-back-button img {
   width: 24px;
   height: 24px;
 }
@@ -83,18 +80,7 @@
   width: 24px;
   height: 24px;
   margin-left: 100px;
-  cursor: pointer; /* 클릭 가능함을 표시하는 커서 스타일 */
-}
-
-/* ✅ 트레이너 리스트 */
-.trainer-grid {
-  padding-top: 15px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
-  width: 100%;
-  max-width: 400px;
-  justify-items: center;
+  cursor: pointer;
 }
 
 /* 하단 버튼 고정 */
@@ -102,24 +88,13 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  max-width:350px;
+  max-width: 350px;
   background-color: white;
   padding: 20px;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
-  z-index: 1000; /* z-index 값을 더 높게 설정 */
-}
-
-/* ✅ 하단 버튼 고정 */
-.walk4-bottom-section {
-  background-color: white;
-  padding: 20px;
-  position: sticky;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .Walk4-next-button {
@@ -132,107 +107,29 @@
   transition: background-color 0.2s;
   font-size: 16px;
   width: 100%;
-  max-width: 460px; /* 버튼 너비 제한 */
+  max-width: 460px;
   text-align: center;
 }
 
-.walk4-next-button.disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* ✅ 트레이너 리스트 감싸는 스크롤 컨테이너 */
-.trainer-scroll-container {
-  flex-grow: 1;
-  overflow-y: auto; /* 스크롤 가능 */
-  padding-bottom: 20px;
-
-  /* 🔥 높이 지정 (헤더 & 하단 버튼 제외) */
-  height: calc(100vh - 140px);
-}
-
-/* ✅ 트레이너 리스트 2개씩 정렬 */
-.trainer-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2개씩 정렬 */
-  gap: 10px;
-  padding-bottom: 20px; /* 하단 버튼과 간격 */
-  overflow: hidden;
-}
-/* ❓ 아이콘 버튼 */
-.Walk4-info-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  position: absolute;
-  right: 20px;
-  top: 73%;
-  transform: translateY(-50%);
-}
-
-.Walk4-info-button img {
-  width: 24px;
-  height: 24px;
-}
-
-/* ✅ 선택된 트레이너 카드 스타일 */
+/* 선택된 트레이너 카드 스타일 */
 .trainer-card.selected {
   border: 1px solid #f2762e;
   background-color: #ffefdb;
   transition: all 0.2s ease-in-out;
 }
 
-/* ✅ 선택된 트레이너 정보 표시 */
-.Walk4-selected-info {
-  text-align: center;
-  font-size: 16px;
-  margin-top: 10px;
-  font-weight: bold;
-  color: #333;
-  padding: 0 20px;
-  margin-bottom: 120px; /* 80px에서 120px로 증가 */
-}
-
-/* ✅ 버튼 비활성화 스타일 */
+/* 버튼 비활성화 스타일 */
 .Walk4-next-button.disabled {
   background-color: #ccc;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-/* ✅ 로딩 중 표시 스타일 */
+/* 로딩 중 표시 스타일 */
 .Walk4-loading {
   text-align: center;
   font-size: 18px;
   font-weight: bold;
   color: #333;
   padding: 20px;
-}
-
-/* 추천 메시지 컨테이너 스타일 */
-.recommendation-container {
-  margin-top: 15px;
-  padding: 10px 15px;
-  background-color: #FFF8E1;
-  border-radius: 8px;
-  border-left: 3px solid #F2762E;
-  font-size: 14px;
-  line-height: 1.5;
-  /* max-height 제거 */
-  /* overflow-y 제거 */
-  word-break: keep-all;
-  text-align: left;
-}
-
-/* 추천 메시지 제목 스타일 */
-.recommendation-title {
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #F2762E;
-}
-
-/* 콘텐츠 영역 패딩 조정 */
-.Walk4-content {
-  padding-bottom: 100px; /* 하단 버튼 높이 + 여백 */
 }

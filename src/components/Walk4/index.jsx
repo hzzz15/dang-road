@@ -39,7 +39,6 @@ const Walk4 = () => {
     // ✅ 선택된 트레이너 ID 로컬 스토리지에 저장
     localStorage.setItem("selected_trainer_id", selectedTrainer.trainer_id);
     console.log("✅ 선택한 트레이너 ID 로컬 스토리지에 저장:", selectedTrainer.trainer_id);
-
     console.log("✅ 선택한 트레이너:", selectedTrainer);
 
     // Walk5로 이동
@@ -58,7 +57,9 @@ const Walk4 = () => {
             src="/icons/question.png"
             alt="도움말"
             className="Walk4-title-icon"
-            onClick={() => navigate("/Walk4_noticePage")}
+            onClick={() => navigate("/Walk4_noticePage", { 
+              state: { selectedTrainer } 
+            })}
           />
         </h1>
       </header>
@@ -82,18 +83,6 @@ const Walk4 = () => {
           </div>
         )}
       </div>
-
-      {selectedTrainer && (
-        <div className="Walk4-selected-info">
-          <p>선택한 트레이너: <strong>{selectedTrainer.name}</strong></p>
-          
-          {/* 추천 메시지 표시 영역 추가 */}
-          <div className="recommendation-container">
-            <div className="recommendation-title">트레이너 추천 이유</div>
-            <p>{selectedTrainer.recommendation || "추천 메시지가 없습니다."}</p>
-          </div>
-        </div>
-      )}
 
       <div className="Walk4-bottom">
         <button
