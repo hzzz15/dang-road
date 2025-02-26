@@ -55,7 +55,8 @@
 
 .DbtiResult-box {
   width: 320px;
-  height: 150px;
+  height: auto;
+  min-height: 150px;
   background-color: white;
   border: 2px solid #f2762e;
   border-radius: 8px;
@@ -63,6 +64,41 @@
   align-items: center;
   justify-content: center;
   margin-top: 60px;
+  padding: 20px;
+}
+
+.DbtiResult-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.DbtiResult-mbti {
+  font-size: 18px;
+  color: #f2762e;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.DbtiResult-title {
+  font-size: 16px;
+  color: #f2762e;
+  margin-bottom: 15px;
+}
+
+.DbtiResult-descriptions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.DbtiResult-description-item {
+  font-size: 14px;
+  color: #565656;
+  text-align: left;
+  line-height: 1.4;
 }
 
 .DbtiResult-text {
@@ -86,4 +122,3 @@
 .DbtiResult-button:hover {
   background-color: #FF8C42;
 }
-
