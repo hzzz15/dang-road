@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { supabase } from "../../lib/supabaseClient"
-import "./Walk5.css"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../lib/supabaseClient";
+import "./Walk5.css";
 
 export default function Walk5() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [requestText, setRequestText] = useState(""); // 요청사항 입력
   const [selectedPet, setSelectedPet] = useState(null); // 선택된 반려동물 ID
   const [latestAddress, setLatestAddress] = useState(null);
-  const [profileImage, setProfileImage] = useState(null)
+  const [profileImage, setProfileImage] = useState(null);
   const [petInfo, setPetInfo] = useState({
     name: "",
     size: "",
     birth_date: "",
     gender: ""
-  })
+  });
 
   // ✅ 현재 로그인한 사용자 UUID 가져오기
   const getUserUUID = async () => {
@@ -50,7 +50,7 @@ export default function Walk5() {
     fetchLatestAddress();
   }, []);
 
-  // ✅ 버튼 클릭 시 reservations 테이블에 데이터 저장 후 페이지 이동
+  // ✅ "다음으로" 버튼 클릭 시 reservations 테이블에 데이터 저장 후 페이지 이동
   const handleNext = async () => {
     const userUUID = await getUserUUID();
     if (!userUUID) {
@@ -58,37 +58,47 @@ export default function Walk5() {
       return;
     }
 
-    if(!latestAddress) {
-      console.error("최신 주소 정보가 없습니다.");
+    if (!latestAddress) {
+      console.error("🚨 최신 주소 정보가 없습니다.");
+    }
+
+    // ✅ Walk4에서 저장한 트레이너 ID 가져오기
+    const storedTrainerId = localStorage.getItem("selected_trainer_id");
+    if (!storedTrainerId) {
+      console.error("🚨 선택된 트레이너 ID가 없습니다.");
+      alert("트레이너가 선택되지 않았습니다. 다시 시도해주세요.");
+      return;
     }
 
     const requestData = {
-      uuid_id: userUUID, // 로그인한 사용자 UUID
-      pet_id: 140, // 🐶 실제 선택된 반려동물 ID (테스트용)
-      trainer_id: 127, // 👨‍🏫 트레이너 ID (테스트용)
-      schedule: new Date().toISOString().split("Z")[0], // 🗓️ 예약 시간 (현재 시간)
+      uuid_id: userUUID,
+      pet_id: 140, // 예시
+      trainer_id: storedTrainerId, // ✅ 로컬 스토리지에서 불러온 ID 사용
+      schedule: new Date().toISOString().split("Z")[0],
       status: "pending",
       address: latestAddress.address,
       latitude: latestAddress.latitude,
       longitude: latestAddress.longitude,
+      // + 필요하면 requestText(요청사항)도 같이 전송 가능
     };
 
-    console.log("📤 서버로 전송할 데이터:", requestData); // 🚀 디버깅용
+    console.log("📤 서버로 전송할 데이터:", requestData);
 
     try {
       const response = await fetch("http://localhost:8000/api/reservations/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestData),
       });
 
       const result = await response.json();
       if (response.ok) {
         console.log("✅ 예약 생성 완료! 예약 ID:", result.reservation_id);
+
+        // ✅ 예약 ID를 로컬 스토리지에 저장 (Reservation2에서 조회 가능)
         localStorage.setItem("reservation_id", result.reservation_id);
-        // ✅ 데이터 저장 성공하면 페이지 이동
+
+        // 다음 페이지로 이동
         navigate("/Reservation2Page");
       } else {
         console.error("🚨 예약 생성 실패:", result);
@@ -98,87 +108,85 @@ export default function Walk5() {
     }
   };
 
+  // ✅ 최신 주소 재조회
   useEffect(() => {
     fetchLatestAddress();
   }, []);
 
+  // ✅ 반려동물 프로필 정보 조회
   useEffect(() => {
     const fetchPetProfile = async () => {
       try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser()
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
 
         if (userError) {
-          console.error("사용자 정보 조회 에러:", userError)
-          return
+          console.error("사용자 정보 조회 에러:", userError);
+          return;
         }
 
         if (!user) {
-          console.log("로그인된 사용자가 없습니다.")
-          return
+          console.log("로그인된 사용자가 없습니다.");
+          return;
         }
 
         const { data: petData, error: petError } = await supabase
           .from("pets")
           .select("*")
           .eq("uuid_id", user.id)
-          .maybeSingle()
+          .maybeSingle();
 
         if (petError) {
-          console.error("반려견 데이터 조회 에러:", petError)
-          return
+          console.error("반려견 데이터 조회 에러:", petError);
+          return;
         }
 
         if (petData) {
-          setProfileImage(petData.image_url)
+          setProfileImage(petData.image_url);
           setPetInfo({
             name: petData.name || "",
             size: petData.size || "",
             birth_date: petData.birth_date || "",
             gender: petData.gender === "female" ? "여아" : "남아"
-          })
+          });
         }
       } catch (error) {
-        console.error("데이터 불러오기 실패:", error)
+        console.error("데이터 불러오기 실패:", error);
       }
-    }
+    };
 
-    fetchPetProfile()
-  }, [])
+    fetchPetProfile();
+  }, []);
 
-  // 나이 계산 함수 수정
+  // ✅ 나이 계산 함수
   const calculateAge = (birthDate) => {
-    if (!birthDate) return ""
-    
-    const today = new Date()
-    const birth = new Date(birthDate)
-    
-    let years = today.getFullYear() - birth.getFullYear()
-    let months = today.getMonth() - birth.getMonth()
+    if (!birthDate) return "";
 
-    // 월이 음수인 경우 처리
+    const today = new Date();
+    const birth = new Date(birthDate);
+
+    let years = today.getFullYear() - birth.getFullYear();
+    let months = today.getMonth() - birth.getMonth();
+
     if (months < 0) {
-      years--
-      months += 12
+      years--;
+      months += 12;
     }
 
-    // 일자 비교로 월 조정
     if (today.getDate() < birth.getDate()) {
-      months--
+      months--;
       if (months < 0) {
-        years--
-        months += 12
+        years--;
+        months += 12;
       }
     }
 
-    // 년과 개월 표시 로직
     if (years > 0) {
-      if (months > 0) {
-        return `${years}년 ${months}개월`
-      }
-      return `${years}년`
+      return months > 0 ? `${years}년 ${months}개월` : `${years}년`;
     }
-    return `${months}개월`
-  }
+    return `${months}개월`;
+  };
+
+
 
   return (
     <div className="Walk5-container">
@@ -201,9 +209,9 @@ export default function Walk5() {
                 src={profileImage || "/placeholder.svg"}
                 alt="반려동물 프로필"
                 onError={(e) => {
-                  console.error("이미지 로드 실패:", profileImage)
-                  e.target.src = "/placeholder.svg"
-                  setProfileImage(null)
+                  console.error("이미지 로드 실패:", profileImage);
+                  e.target.src = "/placeholder.svg";
+                  setProfileImage(null);
                 }}
               />
             ) : (
@@ -225,24 +233,27 @@ export default function Walk5() {
 
         <div className="Walk5-request-section">
           <h2 className="Walk5-section-title">요청사항</h2>
-          <textarea className="Walk5-request-input" placeholder="요청사항을 꼼꼼하게 적어주세요!" rows={6}
-          value={requestText}
-          onChange={(e) => setRequestText(e.target.value)}>
-          </textarea>
+          <textarea
+            className="Walk5-request-input"
+            placeholder="요청사항을 꼼꼼하게 적어주세요!"
+            rows={6}
+            value={requestText}
+            onChange={(e) => setRequestText(e.target.value)}
+          />
         </div>
-            {/* ✅ 추가된 안내 문구 */}
-            <div className="Walk5-info-box">
-                <p className="Walk5-info-title">📢 강아지 인식표 착용했나요?</p>
-                <p className="Walk5-info-text">
-                  반려견의 안전을 위해 인식표 착용은 필수입니다.
-                  인식표를 착용하지 않은 강아지는 산책이 불가능하며, 이를 어기고 산책 중 발생한 사고에 대한 책임은 보호자에게 있습니다.
-                </p>
-              </div>
-            </div>
+
+        <div className="Walk5-info-box">
+          <p className="Walk5-info-title">📢 강아지 인식표 착용했나요?</p>
+          <p className="Walk5-info-text">
+            반려견의 안전을 위해 인식표 착용은 필수입니다.
+            인식표를 착용하지 않은 강아지는 산책이 불가능하며, 이를 어기고 산책 중 발생한 사고에 대한 책임은 보호자에게 있습니다.
+          </p>
+        </div>
+      </div>
 
       <div className="Walk5-bottom-section">
         <button className="Walk5-next-button" onClick={handleNext}>다음으로</button>
       </div>
     </div>
-  )
+  );
 }

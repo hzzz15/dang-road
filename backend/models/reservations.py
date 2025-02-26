@@ -16,3 +16,8 @@ class Reservation(Base):
     address = Column(String(255), nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
+    created_at = Column(
+        TIMESTAMP(timezone=False),
+        server_default=func.now(),
+        nullable=False
+    )

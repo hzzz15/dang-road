@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Trainer.css";
 
-function Trainer({ name, experience, trainer_mbti, total_match_score, trainer_image_url }) {
+function Trainer({ name, experience, trainer_mbti, total_match_score, trainer_image_url, onClick }) {
   const [imageError, setImageError] = useState(false);
 
   console.log(`📢 트레이너 컴포넌트 데이터 - ${name}:`, {
@@ -10,10 +10,10 @@ function Trainer({ name, experience, trainer_mbti, total_match_score, trainer_im
     trainer_mbti,
     total_match_score,
     trainer_image_url,
-  }); // ✅ 트레이너 데이터 확인
+  });
 
   return (
-    <div className="trainer-card">
+    <div className="trainer-card" onClick={onClick}> {/* ✅ 클릭 가능하게 변경 */}
       <div className="trainer-image-container">
         {trainer_image_url && !imageError ? (
           <img 
@@ -32,7 +32,7 @@ function Trainer({ name, experience, trainer_mbti, total_match_score, trainer_im
       <div className="trainer-info">
         <p className="trainer-name">{name}</p>
         <p className="trainer-mbti">MBTI : {trainer_mbti}</p>
-        <p className="trainer-score">총 궁합 : {total_match_score || "점수 없음"}</p> {/* ✅ GPT 추천 점수 표시 */}
+        <p className="trainer-score">총 궁합 : {total_match_score || "점수 없음"}</p>
       </div>
     </div>
   );

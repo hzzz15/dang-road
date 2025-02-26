@@ -163,3 +163,36 @@
   width: 24px;
   height: 24px;
 }
+
+/* ✅ 선택된 트레이너 카드 스타일 */
+.trainer-card.selected {
+  border: 2px solid #f2762e; /* 강조 색상 */
+  background-color: #ffefdb; /* 선택된 효과 */
+  transform: scale(1.05); /* 선택되면 약간 커지게 */
+  transition: all 0.2s ease-in-out;
+}
+
+/* ✅ 선택된 트레이너 정보 표시 */
+.Walk4-selected-info {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* ✅ 버튼 비활성화 스타일 */
+.Walk4-next-button.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ✅ 로딩 중 표시 스타일 */
+.Walk4-loading {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  padding: 20px;
+}
