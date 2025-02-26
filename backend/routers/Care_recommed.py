@@ -6,7 +6,7 @@ from collections import Counter  # Counter 추가
 router = APIRouter()
 
 # ✅ JSON 파일 로드
-json_file_path = os.path.abspath("C:/Users/USER/Desktop/whoruGit/mainproj/backend/data/animal_data_updated.json")
+json_file_path = os.path.abspath("backend/data/animal_data_updated.json")
 
 if not os.path.exists(json_file_path):
     raise FileNotFoundError(f"JSON 파일을 찾을 수 없습니다: {json_file_path}")

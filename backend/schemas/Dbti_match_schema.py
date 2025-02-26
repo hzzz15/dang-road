@@ -30,7 +30,6 @@ class TrainerBase(BaseModel):
     experience: int = 0
     rating: float = 0
     is_verified: bool = False
-    image_url: Optional[str] = None
     trainer_mbti: Optional[str] = None
     trainer_image_url: Optional[str] = None
 
@@ -115,6 +114,9 @@ class MatchResult(BaseModel):
     mbti_match_score: float
     activity_match_score: float
     total_match_score: float
+    trainer_image_url: Optional[str] = None 
+    name : str 
+    recommendation: str 
 
 class PetMatchResponse(BaseModel):
     pet: PetResponse

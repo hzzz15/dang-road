@@ -27,6 +27,20 @@
     object-fit: cover;
 }
 
+/* 이미지 로드 실패 시 대체 UI */
+.trainer-image-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    color: #666;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 10%;
+}
+
 /* 트레이너 정보 */
 .trainer-info {
     display: flex;
@@ -48,7 +62,6 @@
 }
 .trainer-mbti {
     margin-top: 0;
-
     margin-bottom: 5px;
 }
 
@@ -68,4 +81,3 @@
     font-weight: bold;
     color: #075915;
 }
- 
