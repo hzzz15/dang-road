@@ -163,7 +163,7 @@ const TemporaryCareTest = () => {
             className="TemporaryCare-test-back-icon"
             onClick={handleBackClick}
           />
-          <h1>임시 보호 성향 테스트</h1>
+          <h1>짝궁댕 테스트</h1>
           <p className="TemporaryCare-test-description">우리 강아지와 잘 맞는 보호자를 찾아보세요!</p>
         </div>
       </header>
