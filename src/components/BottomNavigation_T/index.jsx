@@ -53,7 +53,7 @@ function BottomNavigation_T() {
       case "라이브":
         navigate("/Live_TPage")
         break
-      case "발도장":
+      case "발맞춤":
         navigate("/Like_TPage")
         break
       case "프로필":
@@ -66,7 +66,7 @@ function BottomNavigation_T() {
     { name: "예약하기", path: "/Main_TPage", icon: "/bottomnavigationicons/booking.png" },
     { name: "예약내역", path: "/Reservation_TPage", icon: "/bottomnavigationicons/history.png" },
     { name: "라이브", path: "/Live_TPage", icon: "/bottomnavigationicons/live.png" },
-    { name: "발도장", path: "/Like_TPage", icon: "/bottomnavigationicons/paw.png" },
+    { name: "발맞춤", path: "/Like_TPage", icon: "/bottomnavigationicons/paw.png" },
     { name: "프로필", path: "/Profile_TPage", icon: "/bottomnavigationicons/profile.png" },
   ]
 

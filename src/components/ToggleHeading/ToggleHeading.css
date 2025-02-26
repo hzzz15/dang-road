@@ -1,0 +1,39 @@
+.toggle-heading {
+    border: 1px solid #F2762E;
+    border-radius: 20px;
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .toggle-button {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .toggle-button .arrow {
+    transition: transform 0.3s ease;
+  }
+  
+  .toggle-button .arrow.open {
+    transform: rotate(180deg);
+  }
+  
+  .toggle-content {
+    padding: 11px;
+    font-size: 17px;
+    color: #333;
+    border-top: 1px solid #FFF3DA;
+    margin-top: 6px;
+  }
+  

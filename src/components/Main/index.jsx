@@ -87,7 +87,7 @@ function Main() {
         </div>
 
         <div className="dbti-card main-dbti-card clickable-card" onClick={() => handleClick("dbti")}>
-          <h2>우리 댕댕이의 <br/>멍BTI는?!</h2>
+          <h2>우리 댕댕이의 <br/>댕BTI는?!</h2>
           <div className="main-dog-images">
             <img src="/img/dog1.png" alt="강아지1" className="main-dog-image1" />
             <img src="/img/dog1.png" alt="강아지1" className="main-dog-image1-2" />

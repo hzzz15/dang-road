@@ -161,8 +161,8 @@ const MBTITest = () => {
             className="Dbti-test-back-icon"
             onClick={handleBackClick}
           />
-          <h1>멍BTI TEST</h1>
-          <p className="Dbti-test-description">우리 댕댕이의 멍BTI를 검사해보세요!</p>
+          <h1>댕BTI TEST</h1>
+          <p className="Dbti-test-description">우리 댕댕이의 댕BTI를 검사해보세요!</p>
         </div>
       </header>
 

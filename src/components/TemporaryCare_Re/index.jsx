@@ -73,7 +73,7 @@ const TemporaryCare_Re = () => {
                   className={`TemporaryCare_Re-tag ${tag.isSelected ? "selected" : ""}`}
                   onClick={() => handleTagClick(index)}
                 >
-                  {tag.name}
+                  #{tag.name}
                 </button>
               ))
             ) : (

@@ -35,6 +35,8 @@
 .like-t-header-content h2 {
   font-size: 15px;
   color: #565656;
+  font-weight: 500;
+
 }
 
 .like-t-chat-message {
@@ -72,3 +74,11 @@
 .like-t-main-content::-webkit-scrollbar-thumb:hover {
   background: #FFF3DA;
 }
+/* ✅ 토글이 들어가는 컨텐츠 영역 (스크롤 가능) */
+.Like_T-content {
+    flex: 1; /* 남은 공간을 전부 차지 */
+    overflow-y: auto; /* ✅ 여기서만 스크롤 가능 */
+    padding: 20px;
+    max-height: calc(100vh - 80px); /* 헤더 높이를 빼고 남은 부분만 스크롤 */
+  }
+  

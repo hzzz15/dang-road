@@ -509,7 +509,7 @@ export default function DogInformation() {
           </div>
 
           <div className="doginformation-form-group">
-            <label className="doginformation-label">멍BTI</label>
+            <label className="doginformation-label">댕BTI</label>
             <div className="doginformation-mbti-container">
               <input
                 type="text"
@@ -519,7 +519,7 @@ export default function DogInformation() {
                 maxLength="4"
                 readOnly
                 disabled
-                title="멍BTI 테스트 후 자동으로 입력됩니다"
+                title="댕BTI 테스트 후 자동으로 입력됩니다"
               />
               <a href="/DbtiPage" className="doginformation-mbti-button-link">
                 <button type="button" className="doginformation-mbti-button">

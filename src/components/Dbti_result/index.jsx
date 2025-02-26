@@ -32,15 +32,15 @@ const DbtiResult = () => {
             className="DbtiResult-back-icon"
             onClick={() => navigate(-1)}
           />
-          <h1>멍BTI TEST</h1>
-          <p className="DbtiResult-description">우리 댕댕이의 멍BTI를 검사해보세요!</p>
+          <h1>댕BTI TEST</h1>
+          <p className="DbtiResult-description">우리 댕댕이의 댕BTI를 검사해보세요!</p>
         </div>
       </header>
 
       {/* 결과 박스 */}
       <div className="DbtiResult-box">
         {mbti ? (
-          <p className="DbtiResult-text">당신의 강아지 MBTI : {mbti}</p>
+          <p className="DbtiResult-text">당신의 강아지 댕BTI : {mbti}</p>
         ) : (
           <p className="DbtiResult-text">결과를 불러올 수 없습니다.</p>
         )}

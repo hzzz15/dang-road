@@ -61,7 +61,7 @@ function Main_T() {
 
         <div className="Main_T-info-grid">
           <div className="Main_T-info-card clickable-card" onClick={() => handleClick("Reservation_T")}>
-            <h3>지난 예약 <br/>확인하기</h3>
+            <h3>지난 흔적 <br/>돌아보기</h3>
             <p></p>
             <p></p>
           </div>
