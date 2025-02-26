@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ✅ useNavigate 추가
 import { supabase } from "../../lib/supabaseClient";
 import "./Reservation2.css";
 
@@ -19,6 +19,22 @@ function Reservation2() {
   });
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate(); // ✅ useNavigate 사용하여 navigate 변수 초기화
+
+  useEffect(() => {
+    const bc = new BroadcastChannel("navigation_channel");
+
+    // 🔹 메시지 수신 시 페이지 이동
+    bc.onmessage = (event) => {
+      console.log("📩 Reservation2에서 받은 네비게이션 메시지:", event.data);
+      if (event.data?.action === "navigate" && event.data?.target) {
+        navigate(event.data.target);
+      }
+    };
+
+    return () => bc.close(); // 🔹 컴포넌트 언마운트 시 채널 닫기
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
