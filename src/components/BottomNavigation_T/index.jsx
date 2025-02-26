@@ -48,7 +48,7 @@ function BottomNavigation_T() {
         navigate("/Main_TPage")
         break
       case "예약내역":
-        navigate("/Reservation_TPage")
+        navigate("/Reservation2_TPage")
         break
       case "라이브":
         navigate("/Live_TPage")

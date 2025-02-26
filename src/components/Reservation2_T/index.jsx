@@ -1,10 +1,16 @@
 "use client"
 
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import "./Reservation2_T.css"
 import CalendarComponent from "../CalendarComponent"
 
 function Reservation2_T() {
+  const navigate = useNavigate()
+
+  const handleOnClick = () => {
+    navigate("/Reservation_TPage")
+  }
+
   return (
     <div className="reservation2-t-container">
       <header className="reservation2-t-header">
@@ -26,7 +32,9 @@ function Reservation2_T() {
         <CalendarComponent />
         <div className="reservation2-t-matching-text">매칭을 시작하시겠습니까?</div>
         <div className="reservation2-t-toggle-buttons">
-          <button className="reservation2-t-switch-btn on">ON</button>
+          <button className="reservation2-t-switch-btn on" onClick={handleOnClick}>
+            ON
+          </button>
           <button className="reservation2-t-switch-btn off">OFF</button>
         </div>
       </main>
