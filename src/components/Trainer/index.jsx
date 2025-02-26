@@ -28,8 +28,8 @@ function Trainer({ name, experience, trainer_mbti, match_scores, trainer_image_u
 
       <div className="trainer-info">
         <p className="trainer-name">{name}</p>
-        <p className="trainer-mbti">MBTI: {trainer_mbti}</p>
-        <p>총 궁합: {match_scores?.total_match_score}</p>
+        <p className="trainer-mbti">MBTI : {trainer_mbti}</p>
+        <p className="trainer-score">총 궁합: {match_scores?.total_match_score}</p>
       </div>
     </div>
   );
