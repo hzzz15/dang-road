@@ -52,7 +52,15 @@ const Walk4 = () => {
         <button className="Walk4-back-button" onClick={() => navigate("/Walk3Page")}>
           <img src="/icons/back.png" alt="뒤로가기" />
         </button>
-        <h1 className="Walk4-title">트레이너를 선택하시겠습니까?</h1>
+        <h1 className="Walk4-title">
+          트레이너를 <br /> 선택하시겠습니까?
+          <img
+            src="/icons/question.png"
+            alt="도움말"
+            className="Walk4-title-icon"
+            onClick={() => navigate("/Walk4_noticePage")}
+          />
+        </h1>
       </header>
 
       <div className="Walk4-content">
