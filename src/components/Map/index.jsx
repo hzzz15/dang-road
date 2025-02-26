@@ -1,44 +1,24 @@
-import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { supabase } from "../../lib/supabaseClient";
 import RealTimeLocation from "../RealTimeLocation";
 
 const TMAP_API_KEY = process.env.REACT_APP_TMAP_API_KEY;
 
-// ✅ forwardRef 추가하여 ref 전달 받기
-const Map = forwardRef(({ onDataReady }, ref) => {
+const Map = ({ onDataReady }) => {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [distance, setDistance] = useState(null);
   const [steps, setSteps] = useState(null);
   const [time, setTime] = useState(null);
   const [polyline, setPolyline] = useState(null);
+  const [startMarker, setStartMarker] = useState(null);
+  const endMarkerRef = useRef(null);
   const [uuidId, setUuidId] = useState(null);
   const [reservationId, setReservationId] = useState(null);
   const [startLocation, setStartLocation] = useState(null);
   const [endLocation, setEndLocation] = useState(null);
   const [prevEndLocation, setPrevEndLocation] = useState(null);
-
-  // ✅ ref를 통해 외부에서 접근 가능한 함수 노출
-  useImperativeHandle(ref, () => ({
-    updateCurrentLocation: () => {
-      // 현재 위치 가져오기
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const newLocation = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          };
-          console.log("📍 산책 시작: 현재 위치 갱신:", newLocation);
-          handleRealTimeLocationUpdate(newLocation);
-        },
-        (error) => {
-          console.error("🚨 위치 정보를 가져오는데 실패했습니다:", error);
-        },
-        { enableHighAccuracy: true }
-      );
-    }
-  }));
 
   useEffect(() => {
     const fetchUserUUID = async () => {
@@ -58,7 +38,6 @@ const Map = forwardRef(({ onDataReady }, ref) => {
 
   // ✅ `uuid_id`가 설정된 후 데이터 가져오기
   useEffect(() => {
-    console.log("가져온 uuidId:", uuidId)
     if (uuidId) {
         fetchReservationId(uuidId);
     }
@@ -103,32 +82,34 @@ const Map = forwardRef(({ onDataReady }, ref) => {
         latitude: data.latitude,
         longitude: data.longitude
       };
-
       setStartLocation(startLocation);
       setEndLocation(startLocation); // 초기 목적지는 출발지와 동일하게 설정
+      
       initializeMap(startLocation, startLocation);
     } catch (error) {
       console.error("🚨 주소 데이터를 불러오는데 실패했습니다:", error);
     }
   };
 
-  // ✅ 실시간 목적지 업데이트 (30초마다 호출됨)
+    // ✅ 실시간 목적지 업데이트 (30초마다 호출됨)
   const handleRealTimeLocationUpdate = (newLocation) => {
     console.log("📍 실시간 목적지 업데이트:", newLocation);
     setEndLocation(newLocation); // 목적지 업데이트
+
+    if (endMarkerRef.current) {
+      console.log("기존 현위치 마커 위치 변경");
+      endMarkerRef.current.setPosition(new window.Tmapv2.LatLng(newLocation.latitude, newLocation.longitude));
+    }
   };
 
   useEffect(() => {
     if (!startLocation || !endLocation) return;
-
-    // 🛑 목적지가 변경되었을 때만 지도 업데이트
     if (prevEndLocation && prevEndLocation.latitude === endLocation.latitude && prevEndLocation.longitude === endLocation.longitude) {
       console.log("⏳ 위치 변화 없음, API 요청 생략");
       return;
     }
 
     console.log("📌 위치 변화 감지됨! 지도 및 경로 업데이트 실행");
-    initializeMap(startLocation, endLocation);
     fetchWalkingDistance(startLocation, endLocation);
     setPrevEndLocation(endLocation);
   }, [endLocation]);
@@ -143,7 +124,7 @@ const Map = forwardRef(({ onDataReady }, ref) => {
         reqCoordType: "WGS84GEO",
         resCoordType: "WGS84GEO",
         startName: "출발지",
-        endName: "현재위치",
+        endName: "목적지",
       };
 
       const headers = { "Content-Type": "application/json", "appKey": TMAP_API_KEY };
@@ -178,19 +159,18 @@ const Map = forwardRef(({ onDataReady }, ref) => {
       console.log(`⏳ 예상 소요 시간: ${estimatedTime} 분`);
 
       // ✅ 부모 컴포넌트로 데이터 전달
-      if (onDataReady) {
-        onDataReady({ 
-          uuidId,
-          distance: distanceKm, 
-          steps: estimatedSteps, 
-          time: estimatedTime,
-          startLocation: start,
-          endLocation: end,
-        });
-      }
-      
-      drawPedestrianRoute(startLocation, end);
+      onDataReady({ 
+        uuidId,
+        distance: distanceKm, 
+        steps: estimatedSteps, 
+        time: estimatedTime,
+        startLocation: start,
+        endLocation: end,
 
+      });
+      setTimeout(() => {
+        drawPedestrianRoute(start, end, map);
+      }, 1000);
     } catch (error) {
       console.error("🚨 거리 데이터를 불러오는데 실패했습니다:", error);
     }
@@ -201,6 +181,10 @@ const Map = forwardRef(({ onDataReady }, ref) => {
     try {
       console.log("📌 출발지:", start);
       console.log("📌 목적지:", end);
+      if (!mapInstance) {
+        console.error("mapInstance가 null 입니다");
+        return;
+      }
 
       const requestData = {
         startX: start.longitude.toFixed(6),
@@ -251,11 +235,8 @@ const Map = forwardRef(({ onDataReady }, ref) => {
       console.log("📌 변환된 폴리라인 좌표 개수:", drawInfoArr.length);
       console.log("📌 변환된 폴리라인 좌표 목록:", drawInfoArr);
 
-      if (polyline) polyline.setMap(null);
-
       // ✅ 기존 폴리라인 삭제
       if (polyline) {
-        console.log("🛑 기존 폴리라인 삭제");
         polyline.setMap(null);
         setPolyline(null);
       }
@@ -265,7 +246,7 @@ const Map = forwardRef(({ onDataReady }, ref) => {
         path: drawInfoArr,
         strokeColor: "#0000FF",
         strokeWeight: 6,
-        map: mapInstance || map,
+        map: mapInstance,
         zIndex: 1000,
       });
 
@@ -284,11 +265,8 @@ const Map = forwardRef(({ onDataReady }, ref) => {
       setMap(null);
     }
 
-    const startPosition = new window.Tmapv2.LatLng(startLocation.latitude, startLocation.longitude);
-    const endPosition = new window.Tmapv2.LatLng(endLocation.latitude, endLocation.longitude);
-
     const newMap = new window.Tmapv2.Map(mapRef.current, {
-      center: startPosition,
+      center: new window.Tmapv2.LatLng(startLocation.latitude, startLocation.longitude),
       width: "100%",
       height: "100%",
       zoom: 16,
@@ -296,8 +274,18 @@ const Map = forwardRef(({ onDataReady }, ref) => {
 
     setMap(newMap);
 
-    new window.Tmapv2.Marker({ position: startPosition, map: newMap, label: "출발지" });
-    new window.Tmapv2.Marker({ position: endPosition, map: newMap, label: "현재위치" });
+    const startMarkerInstance = new window.Tmapv2.Marker({
+      position: new window.Tmapv2.LatLng(startLocation.latitude, startLocation.longitude), 
+      map: newMap, 
+      icon: "/mapicons/start.png",
+      iconSize: new window.Tmapv2.Size(32, 32) });
+      endMarkerRef.current = new window.Tmapv2.Marker({ 
+      position: new window.Tmapv2.LatLng(endLocation.latitude, endLocation.longitude), 
+      map: newMap, 
+      icon: "/mapicons/end.png", 
+      iconSize: new window.Tmapv2.Size(32, 32) });
+
+      setStartMarker(startMarkerInstance);
   };
 
   return (
@@ -306,6 +294,6 @@ const Map = forwardRef(({ onDataReady }, ref) => {
       <div id="map" ref={mapRef} style={{ width: "100%", height: "80%", borderRadius: "20px" }} />
     </div>
   );
-});
+};
 
 export default Map;

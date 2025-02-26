@@ -11,6 +11,19 @@ function Live_T() {
   const [isEndingWalk, setIsEndingWalk] = useState(false);
   const navigate = useNavigate();
   const mapRef = useRef(null);
+  const [walkData, setWalkData] = useState({
+    uuidId: null,
+    distance: 0,
+    steps: 0,
+    time: 0,
+    startLocation: null,
+    endLocation: null,
+  });
+
+  const handleRouteData = (data) => {
+    console.log("📥 Map에서 받은 데이터:", data);
+    setWalkData(data); // 받은 데이터를 저장
+  };
 
   const handleStartWalk = () => {
     setPopupMessage("산책을 시작하시겠습니까?");
@@ -79,7 +92,7 @@ function Live_T() {
 
       {activeTab === "walk" && (
         <div className="live-T-map-container">
-          <Map ref={mapRef} />
+          <Map ref={mapRef} onDataReady={handleRouteData} />
         </div>
       )}
       {activeTab === "chat" && <div className="live-T-chat-message">채팅하기 페이지 아직 미완성</div>}
