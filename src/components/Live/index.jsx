@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // ✅ useEffect 추가
+import { useNavigate } from "react-router-dom"; // ✅ useNavigate 추가
 import "./Live.css";
 import Map from "../Map";
 
@@ -79,6 +80,21 @@ function Live() {
       setIsSending(false); // ✅ 일정 시간 후 다시 전송 가능하게 변경
     }, 1000); // ✅ 2000ms = 2초 후 응답
   };
+
+  const navigate = useNavigate(); // ✅ 페이지 이동을 위한 useNavigate
+
+  useEffect(() => {
+    const bc = new BroadcastChannel("navigation_channel");
+
+    bc.onmessage = (event) => {
+      console.log("📩 Live에서 받은 네비게이션 메시지:", event.data);
+      if (event.data?.action === "navigate" && event.data?.target) {
+        navigate(event.data.target);
+      }
+    };
+
+    return () => bc.close();
+  }, []);
   
   return (
     <div className="live-container" style={{ minHeight: '100%', overflowY: 'auto', overflowX: 'hidden' }}>

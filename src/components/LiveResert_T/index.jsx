@@ -1,44 +1,40 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { supabase } from "../../lib/supabaseClient"
-import Map from "../Map"
-import "./LiveResert_T.css"
+import { useState, useEffect } from "react";
+import { supabase } from "../../lib/supabaseClient";
+import Map from "../Map";
+import "./LiveResert_T.css";
 
 export default function LiveResert_T({}) {
-  const [activeTab, setActiveTab] = useState("walk")
-  const [feedback, setFeedback] = useState("") // 특이사항 입력 상태
-  const [walkData, setWalkData] = useState({
-    distance: 0,
-    steps: 0,
-    time: 0,
-  }) // Map에서 받아온 데이터 저장
+  const [activeTab, setActiveTab] = useState("walk");
+  const [feedback, setFeedback] = useState(""); // 특이사항 입력 상태
+  const [walkData, setWalkData] = useState({ distance: 0, steps: 0, time: 0 });
 
   // 강아지 및 트레이너 정보 상태 추가
   const [dogInfo, setDogInfo] = useState({
     name: "반려견",
     image_url: "/dogprofile/dog.jpg",
-  })
+  });
   const [trainerInfo, setTrainerInfo] = useState({
     image_url: "/trainerprofile/trainer.jpg",
-  })
-  const [isLoading, setIsLoading] = useState(true)
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   // 강아지 및 트레이너 정보 불러오기
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        setIsLoading(true)
+        setIsLoading(true);
 
         // 현재 로그인한 사용자 정보 가져오기
         const {
           data: { user },
           error: userError,
-        } = await supabase.auth.getUser()
+        } = await supabase.auth.getUser();
 
         if (userError || !user) {
-          console.error("로그인이 필요합니다:", userError)
-          return
+          console.error("로그인이 필요합니다:", userError);
+          return;
         }
 
         // 강아지 정보 가져오기
@@ -46,16 +42,15 @@ export default function LiveResert_T({}) {
           .from("pets")
           .select("name, image_url")
           .eq("uuid_id", user.id)
-          .maybeSingle()
+          .maybeSingle();
 
         if (petError) {
-          console.error("강아지 정보 조회 실패:", petError)
+          console.error("강아지 정보 조회 실패:", petError);
         } else if (petData) {
-          console.log("조회된 강아지 정보:", petData)
           setDogInfo({
             name: petData.name || "반려견",
             image_url: petData.image_url || "/dogprofile/dog.jpg",
-          })
+          });
         }
 
         // 트레이너 정보 가져오기
@@ -63,39 +58,36 @@ export default function LiveResert_T({}) {
           .from("trainers")
           .select("trainer_image_url")
           .eq("uuid_id", user.id)
-          .maybeSingle()
+          .maybeSingle();
 
         if (trainerError) {
-          console.error("트레이너 정보 조회 실패:", trainerError)
+          console.error("트레이너 정보 조회 실패:", trainerError);
         } else if (trainerData) {
-          console.log("조회된 트레이너 정보:", trainerData)
           setTrainerInfo({
             image_url: trainerData.trainer_image_url || "/trainerprofile/trainer.jpg",
-          })
+          });
         }
       } catch (error) {
-        console.error("프로필 데이터 로딩 중 오류 발생:", error)
+        console.error("프로필 데이터 로딩 중 오류 발생:", error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchProfileData()
-  }, [])
+    fetchProfileData();
+  }, []);
 
   // Map에서 받은 데이터 저장
   const handleRouteData = (data) => {
-    console.log("📥 Map에서 받은 데이터:", data)
     setWalkData({
       distance: data.distance || 0,
       steps: data.steps || 0,
       time: data.time || 0,
-    })
-  }
+    });
+  };
 
-  // 저장 버튼 클릭 시 산책 데이터 저장
+  // ✅ 저장 버튼 클릭 시 산책 데이터 저장
   const saveWalkingRoute = () => {
-    // 현재 화면에 표시된 데이터를 그대로 저장
     const walkReport = {
       date: new Date().toLocaleDateString(),
       dogName: dogInfo.name,
@@ -105,40 +97,46 @@ export default function LiveResert_T({}) {
       steps: walkData.steps || 0,
       time: walkData.time || 0,
       feedback: feedback || "",
-    }
+    };
 
-    console.log("📤 저장할 산책 데이터:", JSON.stringify(walkReport, null, 2))
+    console.log("📤 저장할 산책 데이터:", JSON.stringify(walkReport, null, 2));
 
-    // localStorage에 데이터 저장
-    localStorage.setItem("walkReport", JSON.stringify(walkReport))
+    // ✅ localStorage에 데이터 저장
+    localStorage.setItem("walkReport", JSON.stringify(walkReport));
+  
+    // ✅ storage 이벤트 강제 트리거 → LiveResert에서 변경 감지 가능
+    window.dispatchEvent(new Event("storage"));
+  
+    // ✅ 1초 뒤에 Live 페이지로 페이지 변경 메시지 전송
+    setTimeout(() => {
+      const navigationData = {
+        timestamp: new Date().getTime(),
+        action: "navigate",
+        target: "/LiveResertPage",
+        id: Math.random().toString(36).substring(2, 9),
+      };
+  
+      localStorage.setItem("navigationTrigger", JSON.stringify(navigationData));
+  
+      // ✅ BroadcastChannel을 통한 메시지 전송
+      try {
+        const bc = new BroadcastChannel("navigation_channel");
+        bc.postMessage(navigationData);
+        bc.close();
+      } catch (error) {
+        console.error("브로드캐스트 채널 오류:", error);
+      }
+    }, 1000); // ⏳ 1초 대기 후 Live 페이지 이동 트리거 전송
+  
+    alert("산책 데이터가 성공적으로 저장되었습니다!");
+  
+    // ✅ 1초 뒤에 Profile_TPage로 이동
+    setTimeout(() => {
+      window.location.href = "/Profile_TPage";
+    }, 1000);
+  };
 
-    // 페이지 이동 트리거를 위한 이벤트 데이터 저장 - 타임스탬프를 더 명확하게 설정
-    const navigationData = {
-      timestamp: new Date().getTime(),
-      action: "navigate",
-      target: "/LiveResertPage",
-      id: Math.random().toString(36).substring(2, 9), // 고유 ID 추가
-    }
-
-    localStorage.setItem("navigationTrigger", JSON.stringify(navigationData))
-    console.log("📤 네비게이션 트리거 저장:", JSON.stringify(navigationData, null, 2))
-
-    // 브로드캐스트 채널을 통한 메시지 전송 (추가)
-    try {
-      const bc = new BroadcastChannel("navigation_channel")
-      bc.postMessage(navigationData)
-      bc.close()
-      console.log("📡 브로드캐스트 메시지 전송 완료")
-    } catch (error) {
-      console.error("브로드캐스트 채널 오류:", error)
-    }
-
-    alert("산책 데이터가 성공적으로 저장되었습니다!")
-
-    // 현재 창은 Profile_TPage로 이동
-    window.location.href = "/Profile_TPage"
-  }
-
+  
   return (
     <div className="LiveResert_T-container" style={{ minHeight: "100%", overflowY: "auto" }}>
       <header className="LiveResert_T-header">
