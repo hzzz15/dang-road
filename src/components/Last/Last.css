@@ -220,14 +220,6 @@
   color: white;
 }
 
-.review-button {
-  composes: action-button;
-}
-
-.meet-again-button {
-  composes: action-button;
-}
-
 .reservation-list {
   padding: 20px 0;
 }

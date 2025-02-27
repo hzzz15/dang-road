@@ -165,7 +165,7 @@ export default function LiveResert_T({}) {
           <Map onDataReady={handleRouteData} />
           <div className="LiveResert_T-walk-report-card">
             <div className="LiveResert_T-report-date">{new Date().toLocaleDateString()}</div>
-            <div className="LiveResert_T-report-title">{isLoading ? "로딩 중..." : `${dogInfo.name} 산책 리포트`}</div>
+            <div className="LiveResert_T-report-title">{isLoading ? "로딩 중..." : `${dogInfo.name}이 산책 리포트`}</div>
 
             <div className="LiveResert_T-profile-section">
               <div className="LiveResert_T-profile-circle LiveResert_T-dog-photo">
