@@ -25,14 +25,4 @@ def save_mbti_result(answers: List[str], mbti: str):
     실제 DB에 저장하는 로직을 구현합니다.
     아래는 예시 코드이며, SQLAlchemy나 다른 ORM, 혹은 직접 DB 쿼리를 날리는 방식으로 구현하면 됩니다.
     """
-    # 예시:
-    # from app.models import MbtiResult
-    # from app.database import SessionLocal
-    # db = SessionLocal()
-    # new_result = MbtiResult(answers=",".join(answers), mbti=mbti)
-    # db.add(new_result)
-    # db.commit()
-    # db.refresh(new_result)
-    # db.close()
-    # return new_result
     print("DB에 저장 (예시):", answers, mbti)
