@@ -86,16 +86,16 @@ npm start
 - 신효진: Frontend / Design
 
 ## 7. 시연 영상
-![인트로-회원가입](assets/1.gif)
 - 회원가입
-![멍bti 테스트](assets/2.gif)
+![인트로-회원가입](assets/1.gif)
 - 멍bti 테스트
-![산책매칭](assets/3.gif)
+![멍bti 테스트](assets/2.gif)
 - 산책매칭
-![산책시작](assets/4.gif)
+![산책매칭](assets/3.gif)
 - 산책시작
-![후기](assets/5.gif)
+![산책시작](assets/4.gif)
 - 후기
-![임시보호](assets/6.gif)
+![후기](assets/5.gif)
 - 임시보호
-=====
+![임시보호](assets/6.gif)
+
