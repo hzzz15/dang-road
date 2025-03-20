@@ -86,5 +86,5 @@ npm start
 - 신효진: Frontend / Design
 
 ## 7. 프로젝트 데모 영상
-[![댕로드 프로젝트 데모 영상](https://img.youtube.com/vi/I6YqQS0vtq8/0.jpg)](https://youtu.be/I6YqQS0vtq8)
+
 
