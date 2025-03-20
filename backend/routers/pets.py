@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession  # ✅ 비동기 세션으로 변경
+from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime
 from backend.database.session import get_db
 from backend.routers.auth import get_current_user
@@ -14,17 +14,17 @@ router = APIRouter()
 @router.get("", response_model=list[PetResponse])
 async def get_pets(
     db: AsyncSession = Depends(get_db),
-    user_uuid: UUID = Depends(get_current_user)  # ✅ 현재 로그인한 사용자의 UUID
+    user_uuid: UUID = Depends(get_current_user) 
 ):
     """
     현재 사용자의 반려동물 목록 조회
     """
     pets = await db.execute(
-        select(Pet).where(Pet.owner_id == str(user_uuid))  # ✅ 여기서 uuid_id 없이 필터링 가능
+        select(Pet).where(Pet.owner_id == str(user_uuid))
     )
     return [PetResponse.from_orm(pet) for pet in pets.scalars().all()]
 
-
+# 비동기 세션으로 변경
 @router.post("", response_model=PetResponse)
 async def register_pet(
     pet_data: PetCreate,
@@ -34,7 +34,6 @@ async def register_pet(
     반려동물 정보 등록 API
     """
 
-    # ✅ birth_date 변환
     if isinstance(pet_data.birth_date, str):
         try:
             birth_date_obj = datetime.strptime(pet_data.birth_date, "%Y-%m-%d").date()
@@ -57,7 +56,7 @@ async def register_pet(
     )
 
     db.add(new_pet)
-    await db.commit()  # ✅ 비동기 처리
-    await db.refresh(new_pet)  # ✅ id 값 확인 후 반환
+    await db.commit()  
+    await db.refresh(new_pet)  
 
     return new_pet

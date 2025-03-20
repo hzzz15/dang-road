@@ -1,13 +1,13 @@
 from sqlalchemy import Column, String, ForeignKey, Integer, Float, TIMESTAMP
-from sqlalchemy.dialects.postgresql import UUID  # ✅ PostgreSQL UUID 지원
+from sqlalchemy.dialects.postgresql import UUID 
 from sqlalchemy.sql import func
 from backend.database import Base
 
 class WalkingRoute(Base):
     __tablename__ = "walking_routes"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)  # ✅ int4 기본키 수정
-    reservation_id = Column(Integer, nullable=False)  # ✅ ForeignKey 수정
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)  
+    reservation_id = Column(Integer, nullable=False) 
     start_latitude = Column(Float, nullable=False)
     start_longitude = Column(Float, nullable=False)
     end_latitude = Column(Float, nullable=False)
@@ -22,10 +22,10 @@ class WalkingRoute(Base):
 class WalkReport(Base):
     __tablename__ = "reports"
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)  # ✅ int4 기본키 수정
-    walk_id = Column(Integer, nullable=False)  # ✅ ForeignKey 수정
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)  
+    walk_id = Column(Integer, nullable=False)  
     uuid_id = Column(UUID, nullable=False)
-    trainer_id = Column(Integer, nullable=True)  # ✅ ForeignKey 수정
+    trainer_id = Column(Integer, nullable=True) 
     feedback = Column(String, nullable=True)
     created_at = Column(TIMESTAMP, server_default=func.now())
     distance = Column(Float, ForeignKey("walking_routes.distance_km"), nullable=False)

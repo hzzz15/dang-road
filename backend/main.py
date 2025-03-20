@@ -1,3 +1,6 @@
+import os
+import httpx
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
@@ -9,18 +12,11 @@ from backend.routers.pets import router as pet_router
 from backend.routers.auth import router as auth_router
 from backend.routers.upload import router as upload_router
 from dotenv import load_dotenv
-
-# 밥꺼 추가
 from backend.routers.address import router as address_router
 from backend.routers.google_places import router as google_places_router
 from backend.routers.walk import router as walk
 from backend.routers.reservations import router as reservations
 from backend.routers.gpt_router import router as gpt_router
-
-import os
-import httpx
-
-# 한나
 from backend.routers import review
 
 app = FastAPI()
@@ -42,20 +38,16 @@ app.include_router(Dbti_router.router, prefix="/api")
 app.include_router(Care_recommed.router)
 app.include_router(pet_router, prefix="/api/pets", tags=["Pets"])
 app.include_router(upload_router, prefix="/api/upload", tags=["Upload"])
-app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])  # ✅ prefix 유지
+app.include_router(auth_router, prefix="/api/auth", tags=["Auth"]) 
 app.include_router(Dbti_match_router.router)
-
-# 밥꺼 추가
 app.include_router(address_router, prefix="/api/address", tags=["Address"])
 app.include_router(google_places_router, prefix="/api/places", tags=["Google Places"])
 app.include_router(gpt_router, prefix="/api/gpt", tags=["GPT-4o"])
 app.include_router(walk, prefix="/api/walk", tags=["Walk"])
 app.include_router(reservations, prefix="/api/reservations", tags=["Reservations"])
-
-# 한나
 app.include_router(review.router, prefix="/api", tags=["Reviews"])
 
-# ✅ T맵 도보 길찾기 API 프록시
+# T맵 도보 길찾기 API 프록시
 @app.get("/proxy/tmap-route")
 async def get_tmap_route(start: str, goal: str):
     url = f"https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1"
@@ -87,8 +79,8 @@ async def root():
 async def favicon():
     return Response(status_code=204)
 
-# ✅ 환경 변수 로드
+# 환경 변수 로드
 load_dotenv()
 
-# ✅ 환경 변수 출력 (개발 중에만 유지)
-print("✅ DATABASE_URL:", os.getenv("DATABASE_URL"))
+# 환경 변수 출력 (개발 중에만 유지)
+print("DATABASE_URL:", os.getenv("DATABASE_URL"))

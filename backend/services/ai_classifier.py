@@ -2,7 +2,6 @@ import os
 import openai
 from dotenv import load_dotenv
 
-# ✅ 환경 변수 로드
 load_dotenv()
 API_KEY = os.getenv("AI_API_KEY")
 
@@ -34,23 +33,18 @@ Look at the sentence below and return only one correct tag.
             max_tokens=10
         )
 
-        # ✅ OpenAI 응답 로그 출력 (디버깅)
         print(f"📢 OpenAI 원본 응답: {response}")
-
-        # ✅ 최신 OpenAI API 응답 형식으로 변경
         tag = response.choices[0].message.content.strip()
-
-        # ✅ 태그에서 불필요한 따옴표 제거
         tag = tag.strip(" '\"")
 
-        print(f"✅ 정리된 태그 값: {tag}")  # ✅ 최종 태그 확인
+        print(f" 정리된 태그 값: {tag}")  # 최종 태그 확인
 
         if tag in ["상황공유", "청결도", "교류도"]:
             return tag
         else:
-            print(f"❌ 잘못된 태그 응답: {tag}")  # ✅ FastAPI에서 검증 실패하는 원인 찾기
+            print(f" 잘못된 태그 응답: {tag}")  
             return None
 
     except Exception as e:
-        print(f"❌ OpenAI API 오류: {str(e)}")
+        print(f"OpenAI API 오류: {str(e)}")
         return None

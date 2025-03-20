@@ -4,7 +4,7 @@ from datetime import datetime
 import uuid
 
 class ReservationCreate(BaseModel):
-    uuid_id: uuid.UUID  # ✅ UUID 형식
+    uuid_id: uuid.UUID  
     pet_id: int
     trainer_id: int
     schedule: datetime
@@ -17,7 +17,7 @@ class ReservationResponse(BaseModel):
     trainer_id: int
     schedule: datetime
     status: str
-    address: str # 📌 주소 필드 추가
+    address: str
     latitude: float
     longitude: float
 

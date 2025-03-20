@@ -16,17 +16,17 @@ class PetCreate(BaseModel):
     birth_date: Optional[date] = None
 
 class PetResponse(PetCreate):
-    id: int  # ✅ int 유지
+    id: int  
 
     class Config:
-        from_attributes = True  # ✅ orm_mode 대신 사용
+        from_attributes = True  
 
     @classmethod
     def from_orm(cls, obj):
         """✅ SQLAlchemy 모델을 Pydantic 응답 모델로 변환하는 메서드"""
         return cls(
             id=obj.id,
-            uuid_id=str(obj.uuid_id),  # ✅ 여기서 UUID → str 변환
+            uuid_id=str(obj.uuid_id),  
             name=obj.name,
             breed=obj.breed,
             size=obj.size,

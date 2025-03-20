@@ -2,7 +2,6 @@ import openai
 import os
 from dotenv import load_dotenv
 
-# 환경 변수 로드
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -16,4 +15,4 @@ def ask_gpt4o(prompt: str) -> str:
         )
         return response["choices"][0]["message"]["content"]
     except Exception as e:
-        return f"🚨 GPT-4o 호출 실패: {str(e)}"
+        return f"GPT-4o 호출 실패: {str(e)}"

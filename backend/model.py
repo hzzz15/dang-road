@@ -9,7 +9,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     uuid_id = Column(UUID, unique=True, nullable=False, default=uuid.uuid4)
-    user_id = Column(String, unique=True, nullable=False)  # 로그인용
+    user_id = Column(String, unique=True, nullable=False)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     phone_number = Column(String, nullable=True)

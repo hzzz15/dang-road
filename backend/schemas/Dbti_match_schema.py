@@ -12,13 +12,11 @@ class UserBase(BaseModel):
     is_walker: bool = False
 
 class UserCreate(UserBase):
-    # 회원가입 시 필요한 추가 필드(예: password)가 있다면 추가
     pass
 
 class UserResponse(UserBase):
     id: int
-    uuid_id: str  # UUID -> str 변환
-
+    uuid_id: str 
     class Config:
         orm_mode = True
 
@@ -89,7 +87,7 @@ class MatchScoreResponse(MatchScoreBase):
 class MatchBase(BaseModel):
     pet_id: int
     trainer_id: int
-    schedule: Optional[str] = None  # 실제론 datetime 파싱이 필요
+    schedule: Optional[str] = None 
     status: Optional[str] = None
     route: Optional[str] = None
     distance: Optional[float] = None
