@@ -19,12 +19,12 @@
 ## 2. 기술 스택
 - **Frontend:** React, Figma
 - **Backend:** FastAPI, Python
-- **Database & Cloud:** Supabase, Vercel
-- **APIs:** GPT API, Tmap API
+- **Database & Cloud:** Supabase, postgresql, Vercel
+- **APIs:** GPT API, Tmap API, googleMaps API
 - **Collaboration:** GitHub
 
 ## 3. 아키텍처
-![아키텍처 이미지](public/img/flow.png)
+![아키텍처 이미지](assets/flow.png)
 
 ## 4. 설치 및 실행 방법
 
@@ -86,5 +86,15 @@ npm start
 - 신효진: Frontend / Design
 
 ## 7. 프로젝트 데모 영상
-[![댕로드 프로젝트 데모 영상](https://img.youtube.com/vi/I6YqQS0vtq8/0.jpg)](https://youtu.be/I6YqQS0vtq8)
-
+![인트로-회원가입](assets/1.gif)
+- 회원가입
+![멍bti 테스트](assets/2.gif)
+- 멍bti 테스트
+![산책매칭](assets/3.gif)
+- 산책매칭
+![산책시작](assets/4.gif)
+- 산책시작
+![후기](assets/5.gif)
+- 후기
+![임시보호](assets/6.gif)
+- 임시보호
