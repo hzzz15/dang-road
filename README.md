@@ -86,6 +86,7 @@ npm start
 - 신효진: Frontend / Design
 
 ## 7. 프로젝트 데모 영상
+<<<<<<< HEAD
 ![인트로-회원가입](assets/1.gif)
 - 회원가입
 ![멍bti 테스트](assets/2.gif)
@@ -98,3 +99,7 @@ npm start
 - 후기
 ![임시보호](assets/6.gif)
 - 임시보호
+=======
+
+
+>>>>>>> 0b19b52839530e48ec4966da49113a1cd0d28160
