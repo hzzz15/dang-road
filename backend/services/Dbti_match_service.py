@@ -6,10 +6,9 @@ from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend.models.Dbti_match import Pet, Trainer, MatchScore
 
-# 환경 변수 또는 기본값으로 OpenAI API 키 설정
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# --- 캐싱된 상세 MBTI 정보 (내부 저장용) ---
+# (내부 저장용)
 DOG_MBTI_DESCRIPTIONS = (
     "| ENTJ (대담한 지휘관형) |\n"
     "리더십이 강하며, 훈련을 잘 받아들이는 강아지\n"
@@ -100,7 +99,7 @@ HUMAN_MBTI_DESCRIPTIONS = (
     "즉흥적이며 사교성이 뛰어남\n"
 )
 
-# 프롬프트 생성
+# 프롬프트
 def generate_prompt(pet_mbti: str, trainer_mbti: str, experience: int) -> str:
     prompt = (
         f"""
@@ -121,12 +120,12 @@ def generate_prompt(pet_mbti: str, trainer_mbti: str, experience: int) -> str:
         추천 이유:
         이 트레이너는 강아지의 에너지 레벨을 잘 조절하며, 성격적 안정감이 있어 훈련 효과가 뛰어날 것으로 예상됩니다.
         
-        점수를 0~95 사이에서 부여하고, 형식을 유지해줘.
+        점수를 0~100 사이에서 부여하고, 형식을 유지해줘.
         """
     )
     return prompt
 
-# GPT 호출 함수
+# GPT 호출
 async def async_get_openai_recommendation(prompt: str) -> tuple:
     await asyncio.sleep(2)
     try:
@@ -140,7 +139,7 @@ async def async_get_openai_recommendation(prompt: str) -> tuple:
             temperature=0.2
         )
         recommendation = response["choices"][0]["message"]["content"].strip()
-        # GPT 응답에서 숫자(0~100)를 추출 (예: "궁합 점수: 85")
+        # GPT 응답에서 궁합도 숫자 추출
         match = re.search(r"(?:궁합\s*점수|매칭\s*점수)[:：]?\s*(\d{1,3})", recommendation)
         if match:
             gpt_score = int(match.group(1))
